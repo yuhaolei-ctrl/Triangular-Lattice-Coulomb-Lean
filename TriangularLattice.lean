@@ -7,6 +7,9 @@ module
 
 public import TriangularLattice.Statement
 public import TriangularLattice.Main
+public import TriangularLattice.Rigidity.Directions
+public import TriangularLattice.Rigidity.Hexagon
+public import TriangularLattice.Rigidity.ThreeShell
 
 /-!
 # The triangular lattice minimizes the two-dimensional Coulomb renormalized energy
