@@ -28,6 +28,7 @@ Ewald kernel `q₀(x) = ½ E₁(π |x|²)`, the auxiliary function of the manusc
 @[expose] public section
 
 open MeasureTheory Filter Topology Set Real
+open scoped ContDiff
 
 namespace TriangularLattice
 
@@ -186,5 +187,17 @@ lemma tendsto_expIntegral_add_log :
     linarith [(expIntegral_add_log_sub_mem_Icc hy).1]
   · filter_upwards [self_mem_nhdsWithin] with y hy
     linarith [(expIntegral_add_log_sub_mem_Icc hy).2]
+
+lemma deriv_expIntegral {y : ℝ} (hy : 0 < y) : deriv expIntegral y = -(Real.exp (-y) / y) :=
+  (hasDerivAt_expIntegral hy).deriv
+
+/-- `E₁` is smooth on `(0, ∞)`. -/
+lemma contDiffOn_expIntegral : ContDiffOn ℝ ∞ expIntegral (Ioi 0) := by
+  rw [contDiffOn_infty_iff_deriv_of_isOpen isOpen_Ioi]
+  refine ⟨fun y hy => (hasDerivAt_expIntegral hy).differentiableAt.differentiableWithinAt, ?_⟩
+  refine ContDiffOn.congr (f := fun y : ℝ => -(Real.exp (-y) / y)) ?_ fun y hy =>
+    deriv_expIntegral hy
+  exact ((Real.contDiff_exp.comp contDiff_neg).contDiffOn.div contDiffOn_id
+    fun y hy => (show (0 : ℝ) < y from hy).ne').neg
 
 end TriangularLattice

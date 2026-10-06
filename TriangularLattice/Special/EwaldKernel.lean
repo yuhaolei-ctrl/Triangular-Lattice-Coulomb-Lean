@@ -9,6 +9,7 @@ public import TriangularLattice.Special.ExpIntegral
 public import TriangularLattice.Statement
 public import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
 public import Mathlib.MeasureTheory.Integral.Prod
+public import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-!
 # The Ewald kernel
@@ -29,7 +30,7 @@ decomposition of the Green function of a torus.
 @[expose] public section
 
 open MeasureTheory Filter Topology Set Real Complex
-open scoped FourierTransform
+open scoped FourierTransform ContDiff
 
 namespace TriangularLattice
 
@@ -269,5 +270,17 @@ lemma tendsto_ewaldKernel_add_log :
     linarith [(ewaldKernel_add_log_sub_mem_Icc hx).1]
   · filter_upwards [self_mem_nhdsWithin] with x hx
     linarith [(ewaldKernel_add_log_sub_mem_Icc hx).2]
+
+/-- The Ewald kernel is smooth off the origin. -/
+lemma contDiffOn_ewaldKernel : ContDiffOn ℝ ∞ ewaldKernel {0}ᶜ := by
+  have h : ContDiffOn ℝ ∞ (fun x : Plane => π * ‖x‖ ^ 2) {0}ᶜ :=
+    (contDiff_const.mul (contDiff_norm_sq ℝ)).contDiffOn
+  refine (contDiffOn_expIntegral.comp h fun x hx => ?_).div_const 2
+  have hx : x ≠ 0 := hx
+  show 0 < π * ‖x‖ ^ 2
+  positivity
+
+lemma continuousOn_ewaldKernel : ContinuousOn ewaldKernel {0}ᶜ :=
+  contDiffOn_ewaldKernel.continuousOn
 
 end TriangularLattice
