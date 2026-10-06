@@ -122,6 +122,12 @@ theorem eps_le_sqrt (hX : IsRetainedSet ε X) : ε ≤ √ε := by
         exact h1
     _ = √ε := mul_one _
 
+theorem eps_le_sqrt_div (hX : IsRetainedSet ε X) : ε ≤ √ε / 10 ^ 4 := by
+  have h := hX.sqrt_le
+  calc ε = √ε * √ε := (Real.mul_self_sqrt hX.pos.le).symm
+    _ ≤ √ε * (1 / 10 ^ 4) := mul_le_mul_of_nonneg_left h (Real.sqrt_nonneg _)
+    _ = √ε / 10 ^ 4 := by ring
+
 theorem one_lt_mul (hX : IsRetainedSet ε X) : 1 < latticeSpacing * (1 - ε) := by
   have := hX.le_small
   nlinarith [lt_latticeSpacing]

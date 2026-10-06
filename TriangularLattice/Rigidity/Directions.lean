@@ -318,6 +318,29 @@ theorem exists_slotAngle_eq (θ : ℝ) (s : ℤ) :
   push_cast
   ring
 
+/-- If `|ψ|` is within `η` of `kπ/3` with `k ∈ ℕ`, then `θ + ψ` is within `η` of a slot direction
+at orientation `θ`. -/
+theorem exists_norm_coe_sub_slotAngle_le (θ ψ η : ℝ) (k : ℕ)
+    (h : |(|ψ| - k * (π / 3))| ≤ η) :
+    ∃ j : Fin 6, ‖((θ + ψ : ℝ) : Angle) - slotAngle θ j‖ ≤ η := by
+  rcases le_or_gt 0 ψ with hψ | hψ
+  · obtain ⟨j, hj⟩ := exists_slotAngle_eq θ k
+    refine ⟨j, ?_⟩
+    rw [hj, ← Angle.coe_sub]
+    refine (Angle.norm_coe_le_abs _).trans ?_
+    rw [abs_of_nonneg hψ] at h
+    convert h using 2
+    push_cast
+    ring
+  · obtain ⟨j, hj⟩ := exists_slotAngle_eq θ (-k)
+    refine ⟨j, ?_⟩
+    rw [hj, ← Angle.coe_sub]
+    refine (Angle.norm_coe_le_abs _).trans ?_
+    rw [abs_of_neg hψ, ← abs_neg] at h
+    convert h using 2
+    push_cast
+    ring
+
 /-! ### Angles from cosines -/
 
 /-- If `cos d` is within `δ ≤ 1/100` of `cos d₀`, where `sin d₀ = √3/2` and `|cos d₀| ≤ 1/2`
