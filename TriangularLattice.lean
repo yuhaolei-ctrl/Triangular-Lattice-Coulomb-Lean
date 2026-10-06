@@ -7,6 +7,8 @@ module
 
 public import TriangularLattice.Statement
 public import TriangularLattice.Main
+public import TriangularLattice.Special.ExpIntegral
+public import TriangularLattice.Special.EwaldKernel
 
 /-!
 # The triangular lattice minimizes the two-dimensional Coulomb renormalized energy
