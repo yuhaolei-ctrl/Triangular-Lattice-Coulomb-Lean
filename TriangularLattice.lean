@@ -6,6 +6,7 @@ Authors: Yuhao Lei
 module
 
 public import TriangularLattice.Statement
+public import TriangularLattice.Basic.Lattice
 public import TriangularLattice.Main
 
 /-!
