@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this formalization, please cite it as below."
+title: "The triangular lattice minimizes the two-dimensional Coulomb renormalized energy: a Lean formalization"
+authors:
+  - family-names: "Lei"
+    given-names: "Yuhao"
+    affiliation: "Carnegie Mellon University"
+license: Apache-2.0
+repository-code: "https://github.com/yuhaolei-ctrl/Triangular-Lattice-Coulomb-Lean"

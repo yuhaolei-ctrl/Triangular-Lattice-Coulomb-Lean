@@ -1,0 +1,15 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "TriangularLattice.exists_isCanonicalField",
+    "TriangularLattice.exists_isGreenFunction",
+    "TriangularLattice.energyPerArea_canonicalField",
+    "TriangularLattice.energyPerArea_canonicalField_le"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}
