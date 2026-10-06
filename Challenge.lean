@@ -49,13 +49,14 @@ Equation numbers refer to the LaTeX source of the paper.
   Lebesgue measure. Coordinates are `x 0` and `x 1`.
 * A test function is a smooth real function with compact support. The distributional identities
   (1.1) are stated by integrating against the partial derivatives of test functions:
-  `⟨div E, φ⟩ = -∫ E · ∇φ` and `⟨curl E, φ⟩ = ∫ (E₁ ∂₂φ - E₂ ∂₁φ)`. Sums over the locally finite
+  `⟨div E, φ⟩ = -∫ E · ∇φ` and `⟨curl E, φ⟩ = ∫ (E x 0 · ∂₁φ - E x 1 · ∂₀φ)`, with coordinates and
+  partial derivatives indexed by `Fin 2`. Sums over the locally finite
   set `C` are `finsum`s; they have finitely many nonzero terms because `φ` and `χ` have compact
   support.
 * The limit in (1.2) is `limUnder (𝓝[>] 0)`, and the `limsup` in (1.3) is taken in `EReal`, so
   that `W_U(E) = +∞` is allowed. The cutoff family is a function `χ : ℝ → ℝ² → ℝ` of the size
   parameter `R`; the uniform gradient bound is a common Lipschitz constant.
-* The canonical field `E_Λ` (Definition 2.3) is characterized as a `Λ`-periodic field satisfying
+* The canonical field `E_Λ` (Definition 2.1) is characterized as a `Λ`-periodic field satisfying
   (1.1) for the configuration `C = Λ` with zero average over a period cell; such fields differ
   only on null sets, which do not affect `W`. The Green function `G_Λ` of the torus `ℝ²/Λ`
   (equation (2.3)) is characterized as the `Λ`-periodic locally integrable function, continuous
@@ -109,7 +110,7 @@ structure IsAdmissible (C : Set Plane) (E : Plane → Plane) : Prop where
 `½ ∫_{ℝ² ∖ ⋃_p B(p, η)} χ |E|² + π log η ∑_p χ(p)`. -/
 noncomputable def truncatedEnergy (C : Set Plane) (E : Plane → Plane) (χ : Plane → ℝ)
     (η : ℝ) : ℝ :=
-  (1 / 2) * ∫ x in (⋃ p ∈ C, ball p η)ᶜ, χ x * ‖E x‖ ^ 2 + π * Real.log η * ∑ᶠ p ∈ C, χ p
+  (1 / 2) * (∫ x in (⋃ p ∈ C, ball p η)ᶜ, χ x * ‖E x‖ ^ 2) + π * Real.log η * ∑ᶠ p ∈ C, χ p
 
 /-- **The renormalized energy with weight `χ` (1.2)**, `W(E, χ)`, the limit of the truncated
 energy as `η ↓ 0`. -/
@@ -153,7 +154,7 @@ noncomputable def triangularLattice : Set Plane :=
 noncomputable def fundamentalCell : Set Plane :=
   {x | ∃ s ∈ Ico (0 : ℝ) 1, ∃ t ∈ Ico (0 : ℝ) 1, x = latticeSpacing • !₂[s + t / 2, t * √3 / 2]}
 
-/-- **The canonical field of the triangular lattice (Definition 2.3).** A `Λ`-periodic field
+/-- **The canonical field of the triangular lattice (Definition 2.1).** A `Λ`-periodic field
 satisfying (1.1) for the configuration `Λ`, with zero average over a period cell. -/
 structure IsCanonicalField (E : Plane → Plane) : Prop where
   admissible : IsAdmissible triangularLattice E

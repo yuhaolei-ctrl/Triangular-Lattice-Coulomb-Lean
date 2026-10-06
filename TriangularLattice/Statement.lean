@@ -67,7 +67,7 @@ structure IsAdmissible (C : Set Plane) (E : Plane → Plane) : Prop where
 `½ ∫_{ℝ² ∖ ⋃_p B(p, η)} χ |E|² + π log η ∑_p χ(p)`. -/
 noncomputable def truncatedEnergy (C : Set Plane) (E : Plane → Plane) (χ : Plane → ℝ)
     (η : ℝ) : ℝ :=
-  (1 / 2) * ∫ x in (⋃ p ∈ C, ball p η)ᶜ, χ x * ‖E x‖ ^ 2 + π * Real.log η * ∑ᶠ p ∈ C, χ p
+  (1 / 2) * (∫ x in (⋃ p ∈ C, ball p η)ᶜ, χ x * ‖E x‖ ^ 2) + π * Real.log η * ∑ᶠ p ∈ C, χ p
 
 /-- **The renormalized energy with weight `χ` (1.2)**, `W(E, χ)`, the limit of the truncated
 energy as `η ↓ 0`. -/
@@ -111,7 +111,7 @@ noncomputable def triangularLattice : Set Plane :=
 noncomputable def fundamentalCell : Set Plane :=
   {x | ∃ s ∈ Ico (0 : ℝ) 1, ∃ t ∈ Ico (0 : ℝ) 1, x = latticeSpacing • !₂[s + t / 2, t * √3 / 2]}
 
-/-- **The canonical field of the triangular lattice (Definition 2.3).** A `Λ`-periodic field
+/-- **The canonical field of the triangular lattice (Definition 2.1).** A `Λ`-periodic field
 satisfying (1.1) for the configuration `Λ`, with zero average over a period cell. -/
 structure IsCanonicalField (E : Plane → Plane) : Prop where
   admissible : IsAdmissible triangularLattice E
