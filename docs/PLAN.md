@@ -11,12 +11,29 @@ verbatim into `TriangularLattice/Statement.lean` by `scripts/sync-statement.py`.
 ## Overall route
 
 ```
-Theorem 1.1 (nonperiodic, Challenge)
- ├── value  W_U(E_Λ) = π R_Λ ............ Green function + periodic energy (layers 1–2)
+Theorem 1.1 (Challenge)
+ ├── value  W_U(E_Λ) = π R_Λ ........ Green function of Λ, energy per cell (layers 1–2)
  └── bound  W_U(E) ≥ π R_Λ
-      ├── periodic theorem (Thm 10.x) ... Theorem A (layer 4) + certificate (layer 5)
-      └── periodic approximation ........ screening (layer 6, replaces the citation of [SS12])
+      ├── localization (layer 6): tile the plateau of χ_R by squares Q, close E in each square
+      │   by an explicit boundary-layer field, project onto the Coulomb energy of a compactly
+      │   supported neutral charge ρ_Q
+      └── whole-plane Theorem A (layer 4) + certificate (layer 5):
+          Coulomb energy of ρ_Q ≥ π R_Λ · #(points in Q) − (boundary error = o(|Q|))
 ```
+
+**Deviation from the manuscript's architecture.** The manuscript proves Theorem A for periodic
+configurations and passes to arbitrary fields with the periodic approximation theorem of
+Sandier–Serfaty [SS12, Theorem 1] (screening). The formalization instead proves Theorem A for
+finite configurations in the plane with a background charge, allowing boundary error terms of
+order o(area); the local arguments of §§5–9 are unchanged, sums over a period become finite sums,
+torus Fourier series become the Fourier transform on ℝ². The passage to arbitrary fields then needs
+neither screening nor the existence of minimizers: in a square `Q` whose boundary carries little
+energy (chosen by averaging over offsets of the tiling), the field `F = E·1_Q + Y`, with `Y` an
+explicit field in a layer of width `w` outside `Q` matching the normal flux of `E`
+(`Y = g(y) (1 − s/w) n`, energy `(w/3) ∮_{∂Q} g²`), has divergence `2π ρ_Q` for a compactly
+supported neutral `ρ_Q`, and the projection onto gradient fields bounds its renormalized energy
+below by the Coulomb energy of `ρ_Q`. Tori are needed only for `Λ` and its dilates (the value
+`W_U(E_Λ)`, the Robin decomposition and the zero-stress identity).
 
 The development is allowed to deviate from the manuscript's internal route (constants, the
 auxiliary function `q`, individual arguments) as long as the compared statements are unchanged.
@@ -48,10 +65,17 @@ Layer 2 proves the first three compared statements: `G_Λ` and `E_Λ = -∇G_Λ`
 | Module | Content |
 |---|---|
 | `LP/Admissible` | The class of admissible pairs `(q, χ)` (Definition 3.1, (A1)–(A5)) and Proposition 3.2. |
-| `LP/Decomposition` | Proposition 3.3 for admissible `q`, the slack `𝓛(P)`, the tail interaction `T_V`, and the exact identity (3.W-minus-R). |
+| `LP/Decomposition` | Proposition 3.3 for `Λ` and admissible `q` (Robin decomposition (3.robin-decomp), `R_Λ = c_q − ½ + K₀(0) + t_V`). |
+| `LP/WholePlane` | The whole-plane analogue of Proposition 3.4: for a finite configuration `P` with background `b` and neutral `ρ = ∑ δ_p − b`, the renormalized Coulomb energy equals `n (c_q − ½ + K₀(0)) + 𝓛(ρ) + T_V(ρ)` up to background terms supported near the boundary; `−log|x| = q(x) + ∫ a(k) (e^{2πik·x} − 1) dk + const` (Ewald). |
 | `LP/ZeroStress` | Proposition 3.5, `∑_{λ≠0} |λ| V'(|λ|) = 0`. |
 
-## Layer 4: the rigidity theorem (Theorem A, §§4–9, Appendix B)
+## Layer 4: the rigidity theorem (Theorem A, §§4–9, Appendix B), whole-plane version
+
+Statement shape: for an admissible pair `(q, χ)` with `C_* K ≤ γ`, a finite configuration `P` in a
+square `Q` and a background `b` equal to one on `Q` away from its boundary,
+`|T_V(ρ) − n t_V| ≤ ½ 𝓛(ρ) + C · (boundary terms)`, where the boundary terms are bounded by a
+constant times the perimeter of `Q` times powers of the filter scale. The local lemmas of §§5, 7, 8
+are stated for arbitrary point sets in the plane.
 
 | Module | Content |
 |---|---|
@@ -80,18 +104,15 @@ the comparator must replay the same computation. The certificate is therefore re
 | `Certificate/Verify` | Lemma 10.1 (nonsingularity, positivity, near-contact bound, tail size) by kernel computation. |
 | `Periodic` | Corollary 10.admissible and Theorem 10.periodic. |
 
-## Layer 6: from periodic to arbitrary fields (§11)
-
-The manuscript cites Theorem 1 and Lemma 4.7 of Sandier–Serfaty (CMP 313, 2012). The formalization
-proves what is needed directly, following the screening construction of Sandier–Serfaty and of
-Serfaty's lecture notes, with the smeared-charge lower bounds of Petrache–Serfaty in place of the ball
-construction:
+## Layer 6: from finite configurations to arbitrary fields (replaces §11)
 
 | Module | Content |
 |---|---|
-| `Nonperiodic/Smearing` | Smeared fields `E_η`, monotonicity in `η`, lower bound of `W(E, χ)` by `-C · #charges`, charge discrepancy for finite-energy fields. |
-| `Nonperiodic/Screening` | Screening in a large square: a field with zero normal component on the boundary, `|square|` charges and energy at most `W(E, χ_R) + o(R²)`, reflected to a periodic field. |
-| `Nonperiodic/Main` | Theorem 1.1, the lower bound. |
+| `Nonperiodic/Truncation` | Smeared fields `E_η`; the excision limit dominates the truncated energy (monotonicity, with the close-pair term), with weights; the renormalized energy of `E` on a region is at least `−C · #(charges)`. |
+| `Nonperiodic/Discrepancy` | For `limsup W(E, χ_R)/|U_R| < ∞`: `∫_{U_R} |E_η|² = O(R² |log η|)`, charge discrepancy `o(R²)` in discs and squares, `o(R²)` charges in boundary strips. |
+| `Nonperiodic/Tiling` | Tiling of the plateau of `χ_R` by squares of side `s`, an offset whose grid lines avoid the charges and carry boundary energy `≤ (2/s) ∫ |E_η|²` (averaging), additivity of the excision limit over the tiles. |
+| `Nonperiodic/Closure` | The layer field `Y`, the closed field `F = E·1_Q + Y`, its divergence `2π ρ_Q`, and the projection inequality (renormalized energy of `F` ≥ renormalized Coulomb energy of `ρ_Q`). |
+| `Nonperiodic/Main` | Theorem 1.1, the lower bound, by combining the above with layer 4 and letting `R → ∞`, then `s → ∞`. |
 
 ## Conventions
 
