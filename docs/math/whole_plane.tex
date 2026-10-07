@@ -348,3 +348,106 @@ Lemma~\ref{lem:Bterm} needs $40K\le\gamma\varepsilon^2$.  This is implied by \eq
 \begin{proof}[Proof of (ii)]
 By Proposition~\ref{prop:planedecomp}, (i) and Lemma~\ref{lem:Bterm} (applicable by Remark~\ref{rem:Ksmall}), $\cE(\rho)-nR_\Lam\ge\cL-\frac12\cL-\Bd_A-\frac14\cL-\Bd_B=\frac14\cL-(\Bd_A+\Bd_B)$, and $\Bd_A+\Bd_B\le\Bd$ by \eqref{eq:Psinorms}.
 \end{proof}
+
+%======================================================================
+\part{Localization of an arbitrary field}
+%======================================================================
+
+\section{The smearing kernel}\label{sec:smearing}
+
+\begin{definition}\label{def:zeta}
+$\zeta(x)=\frac3\pi(1-|x|^2)_+^2$, $\zeta_\eta(x)=\eta^{-2}\zeta(x/\eta)$ for $\eta>0$.  $\zeta$ is a $C^1$ radial probability density supported in $\overline{B(0,1)}$, $\norm\zeta_\infty=3/\pi$, $\norm\zeta_{L^2}^2=\frac9{5\pi}$.  Put $m(r)=1-(1-r^2)_+^3$ (so $m(r)=2\pi\int_0^{r}\zeta(t)t\,dt$),
+\[
+G_\zeta(x)=\begin{cases}\frac{11}{12}-\frac32|x|^2+\frac34|x|^4-\frac16|x|^6,&|x|\le1,\\-\log|x|,&|x|\ge1,\end{cases}
+\]
+and, for $\eta>0$, $f_\eta=g-g*\zeta_\eta$, $f^{(2)}_\eta=g-g*\zeta_\eta*\zeta_\eta$, $\kappa_\eta=\iint g(x-y)\zeta_\eta(x)\zeta_\eta(y)\,dx\,dy$, $c_f=\int f_1$, $c_{ff}=\int f_1\zeta$.
+\end{definition}
+
+\begin{lemma}[Newton's theorem for $\zeta$]\label{lem:newton}
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item For $r>0$ and $x\in\R^2$, $\frac1{2\pi}\int_0^{2\pi}g(x-re^{i\theta})\,d\theta=\min(g(x),-\log r)$.
+\item If $\mu$ is a radial probability density supported in $\overline{B(0,r)}$, then $g*\mu\le g$ everywhere and $g*\mu=g$ on $\{|x|\ge r\}$.
+\item $g*\zeta=G_\zeta$; $G_\zeta\in C^2(\R^2)$; $\nabla G_\zeta(x)=-m(|x|)x/|x|^2$; $-\Delta G_\zeta=2\pi\zeta$ pointwise; $g*\zeta_\eta=G_\zeta(\cdot/\eta)-\log\eta$.
+\item $f_\eta=f_1(\cdot/\eta)\ge0$, $\supp f_\eta\subset\overline{B(0,\eta)}$, $f_\eta\le\log_+(\eta/|x|)$, $\nabla f_\eta(x)=-(1-|x|^2/\eta^2)_+^3\,x/|x|^2$, $f_\eta(x)\ge\frac{27}{64}\log\frac{\eta}{2|x|}$ for $|x|\le\eta/2$; in particular $f_\eta\ge c_f':=\frac{27}{64}\log2$ on $B(0,\eta/4)$.  Moreover $c_f=\pi/8$, $\norm{f_\eta}_{L^2}^2\le\pi\eta^2/2$, $c_{ff}\le3/8$, $\int f_\eta|\nabla f_\eta|\le2\pi\eta$, and $\norm{f_{\eta'}}_{L^3}\norm{\nabla f_\eta}_{L^{3/2}}\le7.2\,\eta'^{2/3}\eta^{1/3}$.
+\item $\kappa_\eta=\kappa_1-\log\eta$ and $\frac12\int_{B(0,1)}|\nabla G_\zeta|^2=\pi\kappa_1$.
+\item $f^{(2)}_\eta=f_\eta+f_\eta*\zeta_\eta\ge f_\eta*\zeta_\eta\ge0$ and $\supp f^{(2)}_\eta\subset\overline{B(0,2\eta)}$.
+\item For $0<\alpha\le\eta$, $f_\eta-f_\alpha=g*\zeta_\alpha-g*\zeta_\eta\ge0$, and $\int(f_\eta-f_\alpha)(\zeta_\alpha+\zeta_\eta)=\kappa_\alpha-\kappa_\eta$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) For $|x|>r$, $y\mapsto\log|x-y|$ is harmonic on $B(0,|x|)$, so its mean on $\partial B(0,r)$ is $\log|x|$.  For $|x|<r$, $\log|x-re^{i\theta}|=\log r+\log|1-\bar w e^{i\theta}|$ with $w=x/r$ (complex notation), and $w\mapsto\log|1-\bar we^{i\theta}|$ averaged in $\theta$ is harmonic in $|w|<1$ and radial, hence equal to its value $0$ at $w=0$.  The case $|x|=r$ follows by monotone/dominated convergence ($\log|x-re^{i\theta}|$ is integrable in $\theta$).  In Mathlib this is the circle average of $\log\|\cdot-x\|$ (Jensen's formula).
+(b) In polar coordinates, $g*\mu(x)=\int_0^r2\pi t\tilde\mu(t)\min(g(x),-\log t)\,dt$ with $\mu(y)=\tilde\mu(|y|)$, by (a) and Tonelli; $\min(g(x),-\log t)\le g(x)$ with equality when $|x|\ge t$.
+(c) By (b) and the same formula, $g*\zeta$ is radial with $(g*\zeta)(x)=-\log|x|$ for $|x|\ge1$, and $\frac d{d\rho}(g*\zeta)=-m(\rho)/\rho$ (differentiate $\rho\mapsto\int_0^12\pi t\zeta(t)\min(-\log\rho,-\log t)dt$).  Since $m(\rho)/\rho=3\rho-3\rho^3+\rho^5$ on $[0,1]$, integrating from $1$ gives the polynomial.  The values and first two radial derivatives of the two branches agree at $|x|=1$ ($0,-1,2$), so $G_\zeta\in C^2$, and $\frac1\rho(\rho G_\zeta')'=-6(1-\rho^2)^2=-2\pi\zeta$.  Scaling: $g*\zeta_\eta(x)=\int g(x-\eta z)\zeta(z)dz=\int[g(x/\eta-z)-\log\eta]\zeta(z)dz$.
+(d) The first four assertions follow from (b), (c), and $\min(g,-\log\eta)\le g*\zeta_\eta$ (from (b): $\min(g(x),-\log t)\ge\min(g(x),-\log\eta)$ for $t\le\eta$).  For $|x|\le\eta/2$, $f_\eta(x)=\int_{|x|}^\eta(1-t^2/\eta^2)^3\frac{dt}t\ge(\frac34)^3\log\frac{\eta/2}{|x|}$.  $c_f=2\pi\int_0^1f_1(r)r\,dr=\pi\int_0^1r^2|f_1'(r)|dr=\pi\int_0^1r(1-r^2)^3dr=\pi/8$.  $\norm{\log_+(\eta/|\cdot|)}_{L^2}^2=2\pi\eta^2\int_0^1u\log^2(1/u)\,du=\pi\eta^2/2$.  $c_{ff}\le\norm\zeta_\infty c_f=3/8$.  $\int f_\eta|\nabla f_\eta|\le\int_{B_\eta}\log(\eta/|x|)|x|^{-1}dx=2\pi\eta$.  $\norm{\log_+(\eta'/|\cdot|)}_{L^3}^3=2\pi\eta'^2\int_0^1u\log^3(1/u)du=\frac{3\pi}4\eta'^2$ and $\norm{|x|^{-1}1_{B_\eta}}_{L^{3/2}}^{3/2}=4\pi\eta^{1/2}$; $(3\pi/4)^{1/3}(4\pi)^{2/3}<7.2$.
+(e) Scaling as in (c) gives $\kappa_\eta=\kappa_1-\log\eta$.  Green's identity on $B(0,1)$ for the $C^2$ function $G_\zeta$, with $G_\zeta=0$ and $\partial_rG_\zeta=-1$ on $\partial B(0,1)$: $\int_{B_1}|\nabla G_\zeta|^2=-\int_{B_1}G_\zeta\Delta G_\zeta=2\pi\int G_\zeta\zeta=2\pi\kappa_1$ (in Mathlib one may instead compute $\int_{B_1}|\nabla G_\zeta|^2=2\pi\int_0^1m(r)^2r^{-1}dr$ and $\kappa_1=\int G_\zeta\zeta$ explicitly as integrals of polynomials).
+(f) $\zeta_\eta*\zeta_\eta$ is a radial probability density supported in $\overline{B(0,2\eta)}$; apply (b); and $g-g*\zeta*\zeta=(g-g*\zeta)+(g-g*\zeta)*\zeta$ by associativity (Fubini).
+(g) By (b), $g*\zeta_\eta(x)=\int_0^12\pi u\zeta(u)\min(g(x),-\log(\eta u))du$, nonincreasing in $\eta$.  For the integral: by definition $\int f_\eta\zeta_\alpha=(g*\zeta_\alpha)(0)-\iint g\zeta_\eta\zeta_\alpha$, $\int f_\alpha\zeta_\alpha=(g*\zeta_\alpha)(0)-\kappa_\alpha$, $\int f_\eta\zeta_\eta=(g*\zeta_\eta)(0)-\kappa_\eta$, $\int f_\alpha\zeta_\eta=(g*\zeta_\eta)(0)-\iint g\zeta_\alpha\zeta_\eta$; combine.
+\end{proof}
+
+\section{The weighted monotonicity identity and the absorbed lower bound}\label{sec:monotone}
+
+Throughout, $(\mathcal C,E)$ is admissible (Lemma~\ref{lem:rep} representative) and $\chi\ge0$ is Lipschitz with compact support, $\Lambda\ge\Lip(\chi)$, $\Lambda>0$.  Let $\mathcal C_\chi=\{p\in\mathcal C:\chi(p)>0\}$ (finite).  A \emph{radius vector} is $\vec\eta=(\eta_p)_{p\in\mathcal C_\chi}$ with $0<\eta_p\le1$.  Put $f_p=f_{\eta_p}(\cdot-p)$, $\zeta_p=\zeta_{\eta_p}(\cdot-p)$, $F_{\vec\eta}=\sum_{p\in\mathcal C_\chi}f_p$ and
+\[
+E_{\vec\eta}=E+\sum_{p\in\mathcal C_\chi}\nabla f_p .
+\]
+$E_{\vec\eta}$ is $C^1$ on $\R^2\setminus(\mathcal C\setminus\mathcal C_\chi)$ (near $p\in\mathcal C_\chi$ it equals $-\nabla(g*\zeta_{\eta_p})(\cdot-p)-\pi(x-p)+\nabla h_p+\sum_{p'\ne p}\nabla f_{p'}$, and $\nabla G_\zeta\in C^1$), $\dvg E_{\vec\eta}=2\pi(\sum_{\mathcal C_\chi}\zeta_p+\sum_{\mathcal C\setminus\mathcal C_\chi}\delta_p-1)$, and $\chi|E_{\vec\eta}|^2\in L^1$ (near $p\notin\mathcal C_\chi$, $\chi(x)\le\Lambda|x-p|$ and $|E_{\vec\eta}|\le|x-p|^{-1}+O(1)$).
+
+\begin{lemma}[weighted monotonicity identity]\label{lem:mono}
+\begin{equation}\label{eq:mono}
+W(E,\chi)=\frac12\int\chi|E_{\vec\eta}|^2-\pi\sum_{p\in\mathcal C_\chi}\chi(p)\kappa_{\eta_p}+\CP_{\vec\eta}(\chi)-2\pi\int\chi F_{\vec\eta}+\mathrm{Err}_{\vec\eta}(\chi),
+\end{equation}
+\begin{align*}
+\CP_{\vec\eta}(\chi)&=\pi\sum_{p\ne p'\in\mathcal C_\chi}\Big[\chi(p)f_{p'}(p)+\int\chi f_{p'}\zeta_p\Big]\ \ge0,\\
+\mathrm{Err}_{\vec\eta}(\chi)&=\frac12\int F_{\vec\eta}\,(E+E_{\vec\eta})\cdot\nabla\chi+\pi\sum_{p\in\mathcal C_\chi}\int(\chi-\chi(p))f_p\zeta_p .
+\end{align*}
+\end{lemma}
+\begin{proof}
+\emph{Step 1: comparison of two radius vectors.}  Let $\vec\alpha\le\vec\eta$ be radius vectors and suppose also that every $p\in\mathcal C\setminus\mathcal C_\chi$ within distance $2$ of $\supp\chi$ is smeared with a common radius $\alpha_0\le1$ in both fields (so the two fields differ only through $\mathcal C_\chi$); write $E^\alpha,E^\eta$.  Put $\varphi_p=f_{\eta_p}(\cdot-p)-f_{\alpha_p}(\cdot-p)\ge0$ (Lemma~\ref{lem:newton}(g)), $\Phi=\sum_{\mathcal C_\chi}\varphi_p$, Lipschitz with compact support.  Then $E^\eta-E^\alpha=\nabla\Phi$ and $-\Delta\Phi=2\pi\sum(\zeta^\alpha_p-\zeta^\eta_p)$ pointwise.  Expanding $|E^\eta|^2=|E^\alpha|^2+2E^\alpha\cdot\nabla\Phi+|\nabla\Phi|^2$ and applying Lemma~\ref{lem:ibp}(a) with $\psi=\chi\Phi$ to $X=E^\alpha$ (divergence $2\pi(\sum\zeta^\alpha_p-1)$) and to $X=\nabla\Phi$,
+\[
+\tfrac12\!\int\!\chi|E^\eta|^2-\tfrac12\!\int\!\chi|E^\alpha|^2=-\pi\!\int\!\chi\Phi\sum_p(\zeta^\alpha_p+\zeta^\eta_p)+2\pi\!\int\!\chi\Phi-\tfrac12\!\int\!\Phi(E^\alpha+E^\eta)\cdot\nabla\chi .
+\]
+In the first term separate $p'=p$: by Lemma~\ref{lem:newton}(g), $\int\chi\varphi_p(\zeta^\alpha_p+\zeta^\eta_p)=\chi(p)(\kappa_{\alpha_p}-\kappa_{\eta_p})+\int(\chi-\chi(p))\varphi_p(\zeta^\alpha_p+\zeta^\eta_p)$.  Hence
+\begin{multline}\label{eq:compare}
+\Big[\tfrac12\!\int\!\chi|E^\eta|^2-\pi\sum\chi(p)\kappa_{\eta_p}\Big]-\Big[\tfrac12\!\int\!\chi|E^\alpha|^2-\pi\sum\chi(p)\kappa_{\alpha_p}\Big]=-\pi\sum_{p\ne p'}\int\chi\varphi_{p'}(\zeta^\alpha_p+\zeta^\eta_p)\\+2\pi\int\chi\Phi-\tfrac12\int\Phi(E^\alpha+E^\eta)\cdot\nabla\chi-\pi\sum_p\int(\chi-\chi(p))\varphi_p(\zeta^\alpha_p+\zeta^\eta_p).
+\end{multline}
+
+\emph{Step 2: the excision limit.}  Let $\alpha_p=\alpha_0=\alpha$ for all points, $\alpha<r_0/2$ where $r_0\le1$ is less than half the minimal distance between distinct points of $\mathcal C$ within distance $2$ of $\supp\chi$ and less than the radii $r_p$ of Lemma~\ref{lem:rep}.  Then $E^\alpha=E$ off $\bigcup B(p,\alpha)$ and on $B(p,\alpha)$, $E^\alpha=-\nabla G_{\zeta_\alpha}(\cdot-p)+H_p$ with $|H_p|\le C_p$ (here $G_{\zeta_\alpha}=g*\zeta_\alpha$).  By Lemma~\ref{lem:newton}(c),(e), $\int_{B(0,\alpha)}|\nabla G_{\zeta_\alpha}|^2=2\pi\kappa_1$ and $\int_{B(0,\alpha)}|\nabla G_{\zeta_\alpha}|=\alpha\int_{B_1}|\nabla G_\zeta|$, so with $|\chi(x)-\chi(p)|\le\Lambda\alpha$ on $B(p,\alpha)$,
+\[
+\tfrac12\int_{B(p,\alpha)}\chi|E^\alpha|^2=\pi\kappa_1\chi(p)+O\big(\Lambda\alpha+C_p\alpha+C_p^2\alpha^2\big).
+\]
+Since $\kappa_\alpha=\kappa_1-\log\alpha$, $\frac12\int\chi|E^\alpha|^2-\pi\kappa_\alpha\sum\chi(p)$ equals the bracket in \eqref{eq:Wchi} up to $o(1)$, so it tends to $W(E,\chi)$.
+
+\emph{Step 3: $\alpha\to0$ in \eqref{eq:compare}} with $\eta_p$ fixed for $p\in\mathcal C_\chi$, $\alpha_p=\alpha$, and the points of $\mathcal C\setminus\mathcal C_\chi$ smeared with radius $\alpha$ in both fields.  For $p\ne p'$ and $\alpha<|p-p'|/2$, $f_{\alpha}(\cdot-p')=0$ on $B(p,\alpha)$, so $\int\chi\varphi_{p'}\zeta^\alpha_p=\int\chi f_{p'}\zeta^\alpha_p\to\chi(p)f_{p'}(p)$ by continuity of $f_{p'}$ at $p$; $\int\chi f_\alpha(\cdot-p')\zeta^\eta_p\le\norm\chi_\infty\norm{\zeta_{\eta_p}}_\infty\alpha^2c_f\to0$.  $\int\chi\Phi\to\int\chi F_{\vec\eta}$ since $\int f_\alpha=c_f\alpha^2$.  $E^\alpha\to E$ in $L^1_{\mathrm{loc}}$ ($\norm{\nabla f_\alpha}_{L^1}=\alpha\norm{\nabla f_1}_{L^1}$), $\Phi\to F_{\vec\eta}$ pointwise with $0\le\Phi\le F_{\vec\eta}$, and $F_{\vec\eta}(|E|+|E_{\vec\eta}|+\sum_p|x-p|^{-1}1_{B(p,1)})|\nabla\chi|$ is integrable (near each $p$ it is $O(\log(1/|x-p|)|x-p|^{-1})$); also $\int_{B(p,\alpha)}\Phi|\nabla f_\alpha(\cdot-p)|\le2\pi\alpha(\log(1/\alpha)+C)\to0$; so the third term converges to $-\frac12\int F_{\vec\eta}(E+E_{\vec\eta})\cdot\nabla\chi$.  In the fourth term, $|\int(\chi-\chi(p))\varphi_p\zeta^\alpha_p|\le\Lambda\alpha\int f_{\eta_p}(\cdot)\zeta_\alpha\le\Lambda\alpha(\log(\eta_p/\alpha)+C)\to0$.  The contributions of $p\in\mathcal C\setminus\mathcal C_\chi$: their $\varphi$ vanish; the pair terms $\int\chi\varphi_{p'}\cdot2\zeta^\alpha_p\le2\Lambda\alpha\sup_{B(p,\alpha)}\varphi_{p'}\to0$; and $\frac12\int\chi|E^\eta|^2\to\frac12\int\chi|E_{\vec\eta}|^2$ because the two fields differ only on $\bigcup_{p\notin\mathcal C_\chi}B(p,\alpha)$, where $\chi\le\Lambda\alpha$ and the $L^2$ norms of both fields are $O(1)$ (resp.\ $\chi|E_{\vec\eta}|^2$ is integrable).  Rearranging gives \eqref{eq:mono}.
+\end{proof}
+
+\begin{lemma}[overlapping pairs versus close pairs]\label{lem:cells}
+Let $X\subset\R^2$ be finite, $r\colon X\to(0,\infty)$ with $|r(p)-r(p')|\le c|p-p'|$, $c\le\frac1{100}$, and $w\colon X\to(0,\infty)$ with $w(p)\le2w(q)$ whenever $|p-q|\le3r(q)$.  Call an ordered pair $(p,p')\in X^2$ \emph{overlapping} if $|p-p'|<r(p)+r(p')$ \textup{(}diagonal included\textup{)} and \emph{close} if $p\ne p'$ and $|p-p'|\le r(p')/4$.  With $K_0=4356$,
+\[
+\sum_{(p,p')\ \mathrm{overlapping}}w(p)\le2K_0\sum_{p\in X}w(p)+64K_0\sum_{(q,q')\ \mathrm{close}}w(q).
+\]
+\end{lemma}
+\begin{proof}
+If $(p,p')$ overlaps then $|p-p'|<2r(p)+c|p-p'|$, so $p'\in Z_p:=X\cap B(p,2.03r(p))$; thus the left side is at most $\sum_pw(p)\#Z_p$.  Cover $B(p,2.03r(p))$ by $K_0\ge66^2$ squares of side $r(p)/16$.  Two points of $Z_p$ in one square are at distance $<0.09r(p)$, while $r(q')\ge(1-2.03c)r(p)\ge0.97r(p)$ for $q'\in Z_p$, so they form a close pair.  With $m_j$ the occupation numbers and $c_p$ the number of close ordered pairs inside $Z_p$, Cauchy--Schwarz gives $(\#Z_p)^2\le K_0\sum m_j^2\le K_0(\#Z_p+c_p)$, hence $\#Z_p\le2K_0+2K_0c_p/\#Z_p$ (if $\#Z_p\ge2K_0$ then $(\#Z_p)^2\le2K_0c_p$).  Now $\sum_pw(p)c_p/\#Z_p\le\sum_{(q,q')\text{ close}}\sum_{p:\,q\in Z_p}w(p)/\#Z_p$.  For fixed $q$, $A_q=\{p:q\in Z_p\}\subset B(q,2.1r(q))$ (since $r(p)\le r(q)+c|p-q|$); cover $B(q,2.1r(q))$ by $16$ squares of side $1.05r(q)$, each of diameter $<1.5r(q)$; for $p$ in such a square $b$, $r(p)\ge0.97r(q)$ and so $Z_p\supset A_q\cap b$; hence $\sum_{p\in A_q\cap b}1/\#Z_p\le1$, and $w(p)\le2w(q)$ on $A_q$.  So $\sum_{p\in A_q}w(p)/\#Z_p\le32w(q)$.
+\end{proof}
+
+\begin{definition}[cutoff-adapted radii]\label{def:radii}
+Fix $c_0=10^{-7}$ and $0<\eta_*\le\min(\frac14,c_0/\Lambda)$.  For $p\in\mathcal C_\chi$ let $\eta_p=\min(\eta_*,c_0\chi(p)/\Lambda)$.  Let $\mathcal C_1=\{p\in\mathcal C:B(p,2\eta_*)\subset\{\chi=1\}\}$ (then $\eta_p=\eta_*$) and $\mathcal C_e=\mathcal C_\chi\setminus\mathcal C_1$.
+\end{definition}
+$p\mapsto\eta_p$ is $c_0$-Lipschitz, and on $B(p,\eta_p)$, $\chi\ge\chi(p)-\Lambda\eta_p\ge(1-c_0)\chi(p)$.  For $p\in\mathcal C_1$, $\nabla\chi=0$ a.e.\ on $B(p,\eta_*)$ and $\chi\equiv1$ there.
+
+\begin{proposition}[absorbed lower bound]\label{prop:absorbed}
+With these radii, $C_*=\pi|\kappa_{\eta_*}+2c_f\eta_*^2|$ and $C_e'=\pi\big(|\log\eta_*|+e^{-1}+\log_+(\Lambda/c_0)+|\kappa_1|\big)+4\pi c_f\eta_*^2+1$,
+\[
+W(E,\chi)\ \ge\ \frac12\int_{\{\chi=1\}}|E_{\vec\eta}|^2+\CP_{11}-\pi\big(\kappa_{\eta_*}+2c_f\eta_*^2\big)\#\mathcal C_1-C_e'\,\#\mathcal C_e ,
+\]
+where $\CP_{11}=\pi\sum_{p\ne p'\in\mathcal C_1}f^{(2)}_{\eta_*}(p-p')$.
+\end{proposition}
+\begin{proof}
+\emph{Error.}  Only $p\in\mathcal C_e$ contribute to $\mathrm{Err}$: for $p\in\mathcal C_1$, $\nabla\chi=0$ a.e.\ on $\supp f_p$ and $\chi-\chi(p)=0$ on $\supp\zeta_p$.  Let $F_e=\sum_{\mathcal C_e}f_p$ and $T=\{\nabla\chi\ne0\}$.  On $T$, $E+E_{\vec\eta}=2E_{\vec\eta}-\sum_{\mathcal C_e}\nabla f_p$ a.e.  (a) $\Lambda\int_TF_e|E_{\vec\eta}|\le\Lambda(\int F_e^2/\chi)^{1/2}(\int_T\chi|E_{\vec\eta}|^2)^{1/2}$.  In $\int F_e^2/\chi=\sum_{p,p'\in\mathcal C_e}\int f_pf_{p'}/\chi$ only overlapping pairs (radii $\eta_p$) contribute; for them $\eta_{p'}\le\frac{1+c_0}{1-c_0}\eta_p$ and $\int f_pf_{p'}/\chi\le\frac{\pi\eta_p\eta_{p'}}{2(1-c_0)\chi(p)}\le2c_0^2\Lambda^{-2}\chi(p)$.  So (a)$\le\frac14\int_T\chi|E_{\vec\eta}|^2+2c_0^2O_e$ with $O_e=\sum_{\text{overlapping }(p,p')\in\mathcal C_e^2}\chi(p)$.  (b) $\frac12\Lambda\sum_{p,p'}\int f_{p'}|\nabla f_p|\le\frac12\Lambda\sum_{\text{overlapping}}7.2\cdot1.03\,\eta_p\le4c_0O_e$ by Lemma~\ref{lem:newton}(d) and Hölder.  (c) $\pi|\int(\chi-\chi(p))f_p\zeta_p|\le\pi\Lambda\eta_pc_{ff}\le1.2c_0\chi(p)$.  Hence $|\mathrm{Err}|\le\frac14\int_T\chi|E_{\vec\eta}|^2+6c_0O_e$.
+\emph{Overlaps.}  Lemma~\ref{lem:cells} applies to $X=\mathcal C_e$, $r=\eta_\cdot$, $w=\chi$ (if $|p-q|\le3\eta_q$ then $|\chi(p)-\chi(q)|\le3c_0\chi(q)$): $O_e\le2K_0\sum_{\mathcal C_e}\chi(p)+64K_0C_e$ with $C_e=\sum_{\text{close}}\chi(q)$.  For a close pair $(q,q')$ in $\mathcal C_e$, $f_{q'}(q)\ge c_f'$, so $\CP_e:=\pi\sum_{q\ne q'\in\mathcal C_e}\chi(q)f_{q'}(q)\ge\pi c_f'C_e$.  Since $6c_0\cdot64K_0\le\frac12\pi c_f'$ and $12c_0K_0\le0.01$: $|\mathrm{Err}|\le\frac14\int_T\chi|E_{\vec\eta}|^2+0.01\#\mathcal C_e+\frac12\CP_e$.
+\emph{Assembly.}  In \eqref{eq:mono}: $\frac12\int\chi|E_{\vec\eta}|^2-\frac14\int_T\chi|E_{\vec\eta}|^2\ge\frac12\int_{\{\chi=1\}}|E_{\vec\eta}|^2$ because $T\cap\{\chi=1\}$ is null.  $\CP_{\vec\eta}\ge\CP_{11}+\CP_e$ (all terms are nonnegative; for $p,p'\in\mathcal C_1$ the bracket is $f_{\eta_*}(p-p')+(f_{\eta_*}*\zeta_{\eta_*})(p-p')=f^{(2)}_{\eta_*}(p-p')$, using $\chi\equiv1$ on $B(p,\eta_*)$ and Lemma~\ref{lem:newton}(f)).  For $p\in\mathcal C_1$: $-\pi\chi(p)\kappa_{\eta_p}-2\pi\int\chi f_p=-\pi(\kappa_{\eta_*}+2c_f\eta_*^2)$.  For $p\in\mathcal C_e$: $-\pi\chi(p)\kappa_{\eta_p}=\pi\chi(p)(\log\eta_p-\kappa_1)\ge-\pi(|\log\eta_*|+e^{-1}+\log_+(\Lambda/c_0)+|\kappa_1|)$ since $\chi\log\chi\ge-e^{-1}$, and $2\pi\int\chi f_p\le2\pi c_f\eta_*^2$.
+\end{proof}
+
+\begin{remark}[why the radii depend on $\chi$]\label{rem:whyradii}
+With a fixed radius $\eta$ the error contains $\int F_\eta E_\eta\cdot\nabla\chi$ near the outer edge of $\supp\chi$, where $\chi\to0$ and the energy $\int\chi|E_\eta|^2$ gives no control of $\int_T|E_\eta|^2$; bounding it by the energy of a larger region leads to an inequality $Z(R)\le CR^2+CR^{1/2}Z(R+c)^{1/2}$, which closes only under an a priori growth bound on $Z(R)=\int_{U_R}|E_\eta|^2$ that admissibility does not provide.  Nearest-neighbor radii near the edge avoid overlaps but make the self-energy $\pi\chi(p)\log\eta_p$ unbounded below for clusters.  Radii proportional to $\chi(p)$ give bounded self-energies ($\chi\log\chi\ge-1/e$) and absorbable errors, and the overlaps they create are paid for by the close-pair term through Lemma~\ref{lem:cells}.  No averaging over $R$ is needed.
+\end{remark}
