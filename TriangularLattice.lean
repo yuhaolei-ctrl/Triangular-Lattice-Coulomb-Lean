@@ -13,6 +13,8 @@ public import TriangularLattice.Rigidity.ThreeShell
 public import TriangularLattice.Rigidity.Slots
 public import TriangularLattice.Rigidity.FullVertex
 public import TriangularLattice.Rigidity.Cells
+public import TriangularLattice.Rigidity.Holes
+public import TriangularLattice.Rigidity.Defects
 
 /-!
 # The triangular lattice minimizes the two-dimensional Coulomb renormalized energy
