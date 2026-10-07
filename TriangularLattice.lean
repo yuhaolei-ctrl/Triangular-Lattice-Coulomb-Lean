@@ -6,6 +6,9 @@ Authors: Yuhao Lei
 module
 
 public import TriangularLattice.Statement
+public import TriangularLattice.Basic.Lattice
+public import TriangularLattice.Basic.Torus
+public import TriangularLattice.Fourier.Poisson
 public import TriangularLattice.Main
 public import TriangularLattice.Special.ExpIntegral
 public import TriangularLattice.Special.EwaldKernel
