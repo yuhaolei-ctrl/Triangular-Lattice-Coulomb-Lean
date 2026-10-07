@@ -451,3 +451,147 @@ where $\CP_{11}=\pi\sum_{p\ne p'\in\mathcal C_1}f^{(2)}_{\eta_*}(p-p')$.
 \begin{remark}[why the radii depend on $\chi$]\label{rem:whyradii}
 With a fixed radius $\eta$ the error contains $\int F_\eta E_\eta\cdot\nabla\chi$ near the outer edge of $\supp\chi$, where $\chi\to0$ and the energy $\int\chi|E_\eta|^2$ gives no control of $\int_T|E_\eta|^2$; bounding it by the energy of a larger region leads to an inequality $Z(R)\le CR^2+CR^{1/2}Z(R+c)^{1/2}$, which closes only under an a priori growth bound on $Z(R)=\int_{U_R}|E_\eta|^2$ that admissibility does not provide.  Nearest-neighbor radii near the edge avoid overlaps but make the self-energy $\pi\chi(p)\log\eta_p$ unbounded below for clusters.  Radii proportional to $\chi(p)$ give bounded self-energies ($\chi\log\chi\ge-1/e$) and absorbable errors, and the overlaps they create are paid for by the close-pair term through Lemma~\ref{lem:cells}.  No averaging over $R$ is needed.
 \end{remark}
+
+\section{A priori bounds}\label{sec:apriori}
+
+From now on $(\mathcal C,E)$ is admissible with \eqref{eq:density}, $(\chi_R)$ is a cutoff family of width $L$ with common Lipschitz constant $\Lambda=\max(\Lambda_\chi,1/L)$, and we assume
+\begin{equation}\label{eq:upper}
+W(E,\chi_R)\le M|U_R|\qquad\text{for all }R\ge R_* .
+\end{equation}
+$\eta_*=\min(\frac14,c_0/\Lambda)$ is fixed, the radii of Definition~\ref{def:radii} are taken with $\chi=\chi_R$, and
+\[
+E_*=E+\sum_{p\in\mathcal C}\nabla f_{\eta_*}(\cdot-p)\in C^1(\R^2),\qquad\dvg E_*=2\pi\Big(\sum_{p\in\mathcal C}\zeta_{\eta_*}(\cdot-p)-1\Big).
+\]
+Let $d_R(x)=\dist(x,\partial U_R)$ and $\Omega_R=\{x\in U_R:d_R(x)\ge L+1\}$.  If $B(p,\eta_*)$ meets $\{x\in U_R:d_R(x)>L+3\eta_*\}$ then $p\in\mathcal C_1(\chi_R)$; hence $E_{\vec\eta}=E_*$ on $\{d_R>L+3\eta_*\}\supset\Omega_R$.  We write $n=n_{\mathcal C}$, $U_R\subset B(0,R)$, so $n(U_R)\le D_0\pi R^2$ for $R\ge1$.
+
+\begin{lemma}[energy and close pairs]\label{lem:energybound}
+For $R\ge\max(R_*,1)$, with $C_A=M\pi+(C_*+C_e')D_0\pi$,
+\[
+\frac12\int_{\Omega_R}|E_*|^2+\pi\sum_{p\ne p'\in\mathcal C_1(\chi_R)}f^{(2)}_{\eta_*}(p-p')\le C_AR^2,\qquad
+N_1(2\eta_*):=\#\{(p,p')\in\mathcal C_1^2:p\ne p',|p-p'|<2\eta_*\}\le C_NR^2,
+\]
+with $C_N=2K_0D_0\pi+64K_0C_A/(\pi c_f')$.
+\end{lemma}
+\begin{proof}
+Proposition~\ref{prop:absorbed} with $\chi=\chi_R$, \eqref{eq:upper}, $\#\mathcal C_1+\#\mathcal C_e\le n(U_R)$ and $\Omega_R\subset\{\chi_R=1\}$.  For the second bound: $f^{(2)}_{\eta_*}\ge f_{\eta_*}\ge c_f'$ on $B(0,\eta_*/4)$, so the number of close pairs (radius $\eta_*/4$) in $\mathcal C_1$ is at most $C_AR^2/(\pi c_f')$; apply Lemma~\ref{lem:cells} with $r\equiv\eta_*$, $w\equiv1$ (overlapping means $|p-p'|<2\eta_*$).
+\end{proof}
+
+\begin{lemma}[discrepancy and strip counts]\label{lem:discrepancy}
+There is $C_D$ \textup{(}depending on $M,D_0,L,\Lambda$\textup{)} such that for $R\ge R_*+2L+8$:
+\[
+\big|n(U_R)-|U_R|\big|\le C_DR^{3/2},\qquad n(U_R\setminus U_{R-a})\le8aR+2C_DR^{3/2}\quad(0\le a\le R).
+\]
+\end{lemma}
+\begin{proof}
+Let $R'=R+2L+6$; then $U_{R+4}\subset\{d_{R'}\ge L+1\}=\Omega_{R'}$ (for squares $d_{R'}=R'/2-|x|_\infty$; for discs similarly with $R'=R+L+5$), so $\int_{U_{R+4}}|E_*|^2\le2C_AR'^2$ by Lemma~\ref{lem:energybound}.  By the coarea formula for $x\mapsto|x|$ (discs) or $x\mapsto2|x|_\infty$ (squares; its gradient has norm $2$ a.e.), $\int_{R+2}^{R+3}\oint_{\partial U_\rho}|E_*|^2d\rho\le2\int_{U_{R+4}}|E_*|^2$, so there is $\rho\in[R+2,R+3]$ with $\oint_{\partial U_\rho}|E_*|^2\le4C_AR'^2$.  The divergence theorem on $U_\rho$ (a box for squares; for discs, the divergence theorem on a disc for $C^1$ fields) gives $2\pi\big(\sum_p\int_{U_\rho}\zeta_{\eta_*}(\cdot-p)-|U_\rho|\big)=\oint_{\partial U_\rho}E_*\cdot n$, bounded by $(|\partial U_\rho|\cdot4C_AR'^2)^{1/2}\le(8\pi(R+3)C_AR'^2)^{1/2}$.  Since $\eta_*<\frac14$, $n(U_R)\le\sum_p\int_{U_\rho}\zeta_{\eta_*}(\cdot-p)$, and $|U_\rho|\le|U_R|+8R+40$.  The lower bound uses $\rho\in[R-3,R-2]$ and $\sum_p\int_{U_\rho}\zeta_{\eta_*}(\cdot-p)\le n(U_R)$.  The strip count is the difference of the bounds at $R$ and $R-a$ plus $|U_R\setminus U_{R-a}|\le2\pi aR$ (discs) or $\le2aR$ (squares); for $R-a<R_*+2L+8$ use $n(U_R)\le|U_R|+C_DR^{3/2}$ directly.
+\end{proof}
+
+\section{Tiling of the plateau}\label{sec:tiling}
+
+Fix $s\ge s_0:=4(\fR/16+2)+4$ (with $\fR=R_0$ of Part~I) and $R\ge R_*+2L+8$.  For $a\in[0,s)^2$ let $\mathcal Q_a$ be the set of open squares $Q=a+sj+(0,s)^2$, $j\in\Z^2$, with $\overline Q\subset\Omega_R$, let $\Omega_a=\bigcup_{\mathcal Q_a}\overline Q$, and define
+\begin{align*}
+X_1(a)&=\sum_{Q\in\mathcal Q_a}\oint_{\partial Q}|E_*|^2,&
+X_2(a)&=\#\mathcal B_a,\quad\mathcal B_a=\{p\in\mathcal C:\overline{B(p,\eta_*)}\cap\partial Q\ne\emptyset\text{ for some }Q\in\mathcal Q_a\},\\
+X_3(a)&=\#\{(p,p')\in\mathcal B_a^2:p\ne p',|p-p'|<2\eta_*\},&
+X_4(a)&=\#\{(p,Q):Q\in\mathcal Q_a,\ p\in Q,\ \dist(p,\partial Q)<\fR/16+2\}.
+\end{align*}
+
+\begin{lemma}[averaging the offset]\label{lem:offset}
+There is $a\in[0,s)^2$ with
+\[
+X_1\le\frac{16}s\int_{\Omega_R}|E_*|^2,\quad X_2\le\frac{16\eta_*}sn(U_R),\quad X_3\le\frac{16\eta_*}sN_1(2\eta_*),\quad X_4\le\frac{16(\fR/16+2)}sn(U_R).
+\]
+\end{lemma}
+\begin{proof}
+Each $X_i$ is a measurable function of $a$ (Tonelli for $X_1$; $X_2,X_3,X_4$ are finite sums of indicators of closed conditions on $a$).  Average over $a$ uniform on $[0,s)^2$.  Every side of a tile lies on a grid line inside $\Omega_R$ and belongs to at most two tiles, so $X_1\le2\int_{\mathcal G_a\cap\Omega_R}|E_*|^2d\mathcal H^1$, $\mathcal G_a$ the grid lines; by Fubini the average of the integral over the vertical grid lines is $\frac1s\int_{\Omega_R}|E_*|^2$, and likewise for the horizontal ones; so $\mathbb E X_1\le\frac4s\int_{\Omega_R}|E_*|^2$.  A point $p$ is in $\mathcal B_a$ only if $p$ is within $\eta_*$ of $\Omega_R\subset U_R$ and of $\mathcal G_a$; for fixed $p$ the probability that $\dist(p,\mathcal G_a)\le\eta_*$ is at most $4\eta_*/s$; so $\mathbb EX_2\le\frac{4\eta_*}sn(U_R)$; the pairs in $X_3$ have first point in $\mathcal B_a$ and both points in $\mathcal C_1(\chi_R)$, so $\mathbb EX_3\le\frac{4\eta_*}sN_1(2\eta_*)$; each point lies in at most one tile and $\dist(p,\partial Q)<D$ forces $\dist(p,\mathcal G_a)<D$, so $\mathbb EX_4\le\frac{4D}sn(U_R)$.  Since $\mathbb E\sum_iX_i/\mathbb EX_i\le4$ (terms with $\mathbb EX_i=0$ vanish a.e.\ and are dropped), some $a$ has $X_i\le4\,\mathbb EX_i$ for all $i$.
+\end{proof}
+
+\begin{lemma}[geometry of the tiled region]\label{lem:tiledgeom}
+$U_R\setminus\Omega_a\subset\{x\in U_R:d_R(x)<L+1+\sqrt2s\}$; $\#\mathcal Q_a\le|U_R|/s^2$; and $\partial\Omega_a$ is a union of tile sides of total length at most $76R$.
+\end{lemma}
+\begin{proof}
+If $d_R(x)\ge L+1+\sqrt2s$, the closed grid square containing $x$ has diameter $\sqrt2s$, so it lies in $\Omega_R$.  Tiles are disjoint subsets of $U_R$.  A side on $\partial\Omega_a$ is shared by a tile $Q$ and a non-tile grid square $Q'$; $\overline{Q'}\not\subset\Omega_R$ gives a point within $\sqrt2s$ of $Q$ with $d_R<L+1$, so $\overline Q\subset\{L+1\le d_R\le L+1+3s\}$, a set of area at most $3s\cdot|\partial U_R|\le19sR$; hence at most $19R/s$ such tiles, each contributing at most $4s$.
+\end{proof}
+
+\section{Closure, projection and recombination}\label{sec:closure}
+
+Fix the offset $a$ of Lemma~\ref{lem:offset}, a tile $Q\in\mathcal Q_a$ with sides $\sigma_1,\dots,\sigma_4$ (open segments) and outward normals $n_i$, a layer width $w>0$ and
+\[
+d_0=r_b+1 .
+\]
+Let $g_Q=E_*\cdot n$ on $\partial Q$ ($C^1$ on each closed side).
+
+\begin{definition}[the closing field]\label{def:Y}
+$\mathrm{Rect}_i=\{y+tn_i:y\in\sigma_i,\ 0<t<d_0+w\}$, $\theta(t)=1$ on $[0,d_0]$, $\theta(t)=1-(t-d_0)/w$ on $[d_0,d_0+w]$, and $Y(y+tn_i)=g_Q(y)\theta(t)n_i$ on $\mathrm{Rect}_i$, $Y=0$ elsewhere.  $F_Q=E_*1_Q+Y$, $\sigma_Q(y+tn_i)=-\frac{g_Q(y)}{2\pi w}1_{(d_0,d_0+w)}(t)$ on $\mathrm{Rect}_i$, $\sigma_Q=0$ elsewhere.
+\end{definition}
+The rectangles are pairwise disjoint and disjoint from $Q$ (the four corner squares are left empty).
+
+\begin{lemma}[closure]\label{lem:closure}
+In the sense of distributions $\dvg F_Q=2\pi\rho_Q$ with
+\[
+\rho_Q=1_Q\Big(\sum_{p\in\mathcal C}\zeta_{\eta_*}(\cdot-p)-1\Big)+\sigma_Q,\qquad\int\rho_Q=0 .
+\]
+Moreover $\frac12\int|Y|^2=\frac12(d_0+\frac w3)\oint_{\partial Q}g_Q^2$, $\norm{\sigma_Q}_{L^2}^2=\frac1{4\pi^2w}\oint_{\partial Q}g_Q^2$, $\norm{\sigma_Q}_{L^1}\le\frac1{2\pi}(4s\oint_{\partial Q}g_Q^2)^{1/2}$, and $\supp\sigma_Q\subset\{x:\dist(x,Q)\ge d_0\}$.
+\end{lemma}
+\begin{proof}
+Let $\psi\in C_c^\infty$.  Lemma~\ref{lem:ibp}(b) on $\overline Q$: $\int_QE_*\cdot\nabla\psi=-\int_Q\psi\dvg E_*+\oint_{\partial Q}\psi g_Q$.  On each $\mathrm{Rect}_i$, split into the boxes $\{t<d_0\}$ and $\{t>d_0\}$, on whose closures $Y$ is $C^1$; $\dvg Y=0$ on the first and $-g_Q(y)/w$ on the second; the fluxes through $t=d_0$ cancel ($Y$ is continuous), $Y\cdot\nu=0$ on the two ends (where $\nu\perp n_i$), $Y=0$ at $t=d_0+w$, and on the inner side $\nu=-n_i$, $Y\cdot\nu=-g_Q$.  Summing, $\int F_Q\cdot\nabla\psi=-\int\psi\,2\pi\rho_Q$.  Neutrality: $\int_Q\dvg E_*=\oint g_Q$ while $\int\sigma_Q=-\frac1{2\pi}\oint g_Q$.  The norms are direct computations ($\int_0^{d_0+w}\theta^2=d_0+w/3$, Cauchy--Schwarz with $|\partial Q|=4s$); the distance from $y+tn_i$ to $Q$ is $t$.
+\end{proof}
+
+\begin{lemma}[projection onto gradients]\label{lem:projection}
+Let $F\in L^2(\R^2;\R^2)$ have compact support, $\rho\in L^\infty(\R^2)$ compact support with $\int\rho=0$, and $-\int F\cdot\nabla\psi=2\pi\int\psi\rho$ for all $\psi\in C_c^\infty$.  Then $\frac12\int|F|^2\ge\pi\iint g(x-y)\rho(x)\rho(y)\,dx\,dy$.
+\end{lemma}
+\begin{proof}
+Let $r_\rho$ with $\supp\rho\subset B(0,r_\rho)$, $u=g*\rho$.  (1) $u\in C^1$ with $\nabla u=(\nabla g)*\rho$ ($\nabla g\in L^1_{\mathrm{loc}}$, differentiation under the integral with an integrable majorant).  (2) For $|x|\ge2r_\rho$, using $\int\rho=0$: $|u(x)|=|\int(g(x-y)-g(x))\rho(y)dy|\le2r_\rho\norm\rho_{L^1}/|x|$ and $|\nabla u(x)|\le4r_\rho\norm\rho_{L^1}/|x|^2$; so $\nabla u\in L^2$.  (3) For $\psi\in C_c^\infty$, $\int\nabla u\cdot\nabla\psi=-\int u\Delta\psi=-\int\rho\,(g*\Delta\psi)=2\pi\int\rho\psi$, since $g*\Delta\psi=-2\pi\psi$; by mollification this holds for $\psi\in C_c^1$.  (4) With $\vartheta\in C_c^\infty$, $0\le\vartheta\le1$, $\vartheta=1$ on $B_1$, $\supp\vartheta\subset B_2$, $\vartheta_k=\vartheta(\cdot/k)$: (3) with $\psi=u\vartheta_k$ gives $\int|\nabla u|^2\vartheta_k+\int u\nabla u\cdot\nabla\vartheta_k=2\pi\int\rho u\vartheta_k$; the middle term is $O(k^{-1}\cdot k^{-3}\cdot k^2)\to0$ by (2); so $\int|\nabla u|^2=2\pi\int\rho u=2\pi\iint g\rho\rho$.  (5) $H=F+\nabla u$ satisfies $\int H\cdot\nabla\psi=0$ for $\psi\in C^1_c$ (by hypothesis, mollification and (3)).  With $\psi=u\vartheta_k$: $\int\vartheta_kH\cdot\nabla u=-\int uH\cdot\nabla\vartheta_k$, and for $k$ large $H=\nabla u$ on $\supp\nabla\vartheta_k$, so the right side $\to0$; the left side $\to\int H\cdot\nabla u$ since $H,\nabla u\in L^2$.  Hence $\int|F|^2=\int|\nabla u|^2+\int|H|^2-2\int H\cdot\nabla u\ge\int|\nabla u|^2$.
+\end{proof}
+
+\begin{definition}[the tile configuration]\label{def:tileconf}
+$P_Q=\{p\in\mathcal C:\overline{B(p,\eta_*)}\subset Q\}$, $n_Q=\#P_Q$, $\tau_Q=1_Q\sum_{p\in\mathcal B_a}\zeta_{\eta_*}(\cdot-p)$, $\beta'_Q=\tau_Q+\sigma_Q$, $\beta_Q=1_Q-\beta'_Q$.
+\end{definition}
+A point whose smeared charge meets $Q$ either lies in $P_Q$ or in $\mathcal B_a$, so $\rho_Q=\sum_{p\in P_Q}\zeta_{\eta_*}(\cdot-p)-\beta_Q$ a.e.  $(P_Q,\beta_Q)$ is a configuration with background (Definition~\ref{def:energy}): $\beta_Q\in L^1\cap L^\infty$ with compact support and $\int\beta_Q=n_Q$ by neutrality.  $P_Q\subset Q$, and $\gamma_{\beta_Q}=1_{\R^2\setminus Q}+\tau_Q+\sigma_Q\ge0$ on $\{\dist(\cdot,Q)<d_0\}\supset\bigcup_{p\in P_Q}B(p,r_b)$, where $\sigma_Q=0$.  So Theorem~\ref{thm:Aprime}(ii) applies to $(P_Q,\beta_Q)$.
+
+\begin{lemma}[recombination]\label{lem:recomb}
+With $\rho^{\mathrm{pt}}_Q=\sum_{p\in P_Q}\delta_p-\beta_Q$,
+\[
+\iint g\,\rho_Q\rho_Q=\cE(\rho^{\mathrm{pt}}_Q)-\!\!\sum_{p\ne p'\in P_Q}\!\!f^{(2)}_{\eta_*}(p-p')+n_Q\big(\kappa_{\eta_*}+2c_f\eta_*^2\big)-2\!\sum_{p\in P_Q}\!(f_{\eta_*}*\tau_Q)(p),
+\]
+and $\sum_{p\in P_Q}(f_{\eta_*}*\tau_Q)(p)\le\sum_{p\in P_Q,\,p'\in\mathcal B_a}(f_{\eta_*}*\zeta_{\eta_*})(p-p')$.
+\end{lemma}
+\begin{proof}
+Expand with $\mu=\sum_{P_Q}\zeta_{\eta_*}(\cdot-p)$: $\iint g\mu\mu=\sum_{p,p'}(g*\zeta*\zeta)(p-p')=\sum_{p\ne p'}(g-f^{(2)}_{\eta_*})(p-p')+n_Q\kappa_{\eta_*}$; $\iint g\mu\beta_Q=\sum_p((g-f_{\eta_*})*\beta_Q)(p)$; and for $p\in P_Q$, $f_{\eta_*}(p-\cdot)$ is supported in $\overline{B(p,\eta_*)}\subset Q$, where $\beta_Q=1-\tau_Q$, so $(f_{\eta_*}*\beta_Q)(p)=c_f\eta_*^2-(f_{\eta_*}*\tau_Q)(p)$.  The inequality uses $1_Q\le1$ and positivity.
+\end{proof}
+
+\section{Assembly}\label{sec:assembly}
+
+\begin{theorem}\label{thm:mainstrong}
+Under \eqref{eq:upper}, $\liminf_{R\to\infty}W(E,\chi_R)/|U_R|\ge\pi R_\Lam$.
+\end{theorem}
+\begin{proof}
+Let $s\ge s_0$, $w=\sqrt s$, $R\ge R_*+2L+8$ large, $a$ as in Lemma~\ref{lem:offset}; $C$ denotes constants depending only on $M,D_0,L,\Lambda$ and $(q,\chi^{\mathrm{aux}})$, never on $s$ or $R$.
+
+\emph{Lower bound in terms of tiles.}  Proposition~\ref{prop:absorbed} with $\chi=\chi_R$; $\Omega_a\subset\Omega_R\subset\{\chi_R=1\}$ and $E_{\vec\eta}=E_*$ there; the sets $P_Q$ are disjoint subsets of $\mathcal C_1$; the ordered pairs inside one $P_Q$ and the pairs (in both orders) between $P_Q$ and $\mathcal B_a\subset\mathcal C_1$ are pairwise distinct for distinct $Q$; and $f^{(2)}\ge f*\zeta$.  Hence
+\[
+W(E,\chi_R)\ge\sum_{Q}\Big[\frac12\int_Q|E_*|^2+\pi\!\!\sum_{p\ne p'\in P_Q}\!\!f^{(2)}(p-p')+2\pi\!\!\sum_{p\in P_Q,p'\in\mathcal B_a}\!\!(f*\zeta)(p-p')-\pi(\kappa_{\eta_*}+2c_f\eta_*^2)n_Q\Big]-C_*\#(\mathcal C_1\setminus{\textstyle\bigcup}P_Q)-C_e'\#\mathcal C_e .
+\]
+By Lemmas~\ref{lem:closure}, \ref{lem:projection}, \ref{lem:recomb} the bracket is at least $\pi\cE(\rho^{\mathrm{pt}}_Q)-\frac12(d_0+\frac w3)\oint g_Q^2$, and by Theorem~\ref{thm:Aprime}(ii), $\pi\cE(\rho^{\mathrm{pt}}_Q)\ge\pi n_QR_\Lam-\pi\Bd_Q$.  Points of $\mathcal C_1\setminus\bigcup P_Q$ lie in $\mathcal B_a$ or in $U_R\setminus\Omega_a$; $\mathcal C_e\subset U_R\setminus U_{R-2L-2}$.  So
+\begin{equation}\label{eq:assembly}
+W(E,\chi_R)\ge\pi R_\Lam\sum_Qn_Q-\pi\sum_Q\Bd_Q-\tfrac12(d_0+\tfrac w3)X_1-C_*X_2-(C_*+C_e')\,n\big(U_R\setminus U_{R-2(L+1+\sqrt2s)}\big).
+\end{equation}
+
+\emph{The count.}  $\sum_Q(n_Q+\int\tau_Q)=\sum_Q(|Q|-\int\sigma_Q)=\sum_Q|Q|+\frac1{2\pi}\sum_Q\oint_{\partial Q}g_Q$, and the flux through a side shared by two tiles cancels, so the last sum is $\oint_{\partial\Omega_a}E_*\cdot n$, at most $(76R\,X_1)^{1/2}$ by Lemma~\ref{lem:tiledgeom} and Cauchy--Schwarz.  $\sum_Q\int\tau_Q\le X_2$.  $|U_R|-\sum_Q|Q|\le|\{d_R<L+1+\sqrt2s\}|\le7(L+1+\sqrt2s)R$.  Thus $\big|\sum_Qn_Q-|U_R|\big|\le X_2+(76RX_1)^{1/2}+7(L+1+\sqrt2s)R$.
+
+\emph{The boundary terms.}  $\sum_Q\Bd_Q=A_\Bd s\#\mathcal Q_a+5\sum\norm{\beta'_Q}_{L^1}+4\sum\norm{\beta'_Q}_{L^2}^2+X_4$, with $\#\mathcal Q_a\le|U_R|/s^2$; $\sum_Q\norm{\beta'_Q}_{L^1}\le\sum_Q\norm{\sigma_Q}_{L^1}+X_2\le\frac1{2\pi}(4s\#\mathcal Q_aX_1)^{1/2}+X_2$; and, since $\sum_Q1_Q\le1$,
+\[
+\sum_Q\norm{\beta'_Q}_{L^2}^2\le2\sum_Q\norm{\sigma_Q}_{L^2}^2+2\sum_Q\norm{\tau_Q}_{L^2}^2\le\frac{X_1}{2\pi^2w}+2\norm{\zeta_{\eta_*}}_{L^2}^2(X_2+X_3),
+\]
+because $\int\zeta_{\eta_*}(\cdot-p)\zeta_{\eta_*}(\cdot-p')\le\norm{\zeta_{\eta_*}}^2_{L^2}$ and vanishes unless $|p-p'|<2\eta_*$.
+
+\emph{Orders of magnitude.}  By Lemmas~\ref{lem:energybound}, \ref{lem:offset}, \ref{lem:discrepancy}: $X_1\le32C_AR^2/s$, $X_2\le CR^2/s$, $X_3\le CR^2/s$, $X_4\le CR^2/s$, $n(U_R\setminus U_{R-2(L+1+\sqrt2s)})\le CsR+CR^{3/2}$.  Hence every term in \eqref{eq:assembly} other than the first, and $\pi|R_\Lam|\,|\sum n_Q-|U_R||$, is bounded by
+\[
+C\Big(\frac{R^2}{\sqrt s}+\frac{R^2}s+sR+R^{3/2}+\frac{R^{3/2}}{\sqrt s}\Big),
+\]
+the leading term coming from $\frac w6X_1\le\frac{16C_A}3R^2s^{-1/2}$.  Dividing by $|U_R|\ge R^2$ (discs: $\pi R^2$) gives $W(E,\chi_R)/|U_R|\ge\pi R_\Lam-C s^{-1/2}-C(s)R^{-1/2}$, whatever the sign of $R_\Lam$.  Let $R\to\infty$, then $s\to\infty$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+If $\limsup_RW(E,\chi_R)/|U_R|=+\infty$ there is nothing to prove.  Otherwise there are $M<\infty$ and $R_*$ with \eqref{eq:upper} (if the $\limsup$ is $-\infty$ take $M=0$), and Theorem~\ref{thm:mainstrong} gives $\limsup\ge\liminf\ge\pi R_\Lam$.  The pair of \ms{Corollary~10.admissible} satisfies \eqref{eq:hypA} with $\fR=R_0$, $\varepsilon=\varepsilon_0(R_0)$ (\S\ref{sec:Aprime}).
+\end{proof}
