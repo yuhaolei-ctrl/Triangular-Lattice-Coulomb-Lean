@@ -9,6 +9,14 @@ public import TriangularLattice.Statement
 public import TriangularLattice.Main
 public import TriangularLattice.Special.ExpIntegral
 public import TriangularLattice.Special.EwaldKernel
+public import TriangularLattice.Rigidity.Directions
+public import TriangularLattice.Rigidity.Hexagon
+public import TriangularLattice.Rigidity.ThreeShell
+public import TriangularLattice.Rigidity.Slots
+public import TriangularLattice.Rigidity.FullVertex
+public import TriangularLattice.Rigidity.Cells
+public import TriangularLattice.Rigidity.Holes
+public import TriangularLattice.Rigidity.Defects
 
 /-!
 # The triangular lattice minimizes the two-dimensional Coulomb renormalized energy
