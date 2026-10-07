@@ -271,6 +271,20 @@ theorem finrank_points : finrank ℤ Γ.points = 2 := by
 /-- The lattice point `m b₀ + n b₁`. -/
 def point (p : ℤ × ℤ) : Plane := (p.1 : ℝ) • Γ.b₀ + (p.2 : ℝ) • Γ.b₁
 
+/-- The lattice point of `-p` is the negative of the lattice point of `p`. -/
+theorem point_neg (p : ℤ × ℤ) : Γ.point (-p) = -Γ.point p := by
+  simp only [point, Prod.fst_neg, Prod.snd_neg, Int.cast_neg, neg_smul, neg_add]
+
+/-- The lattice point of `p + q` is the sum of the lattice points of `p` and `q`. -/
+theorem point_add (p q : ℤ × ℤ) : Γ.point (p + q) = Γ.point p + Γ.point q := by
+  simp only [point, Prod.fst_add, Prod.snd_add, Int.cast_add, add_smul]
+  abel
+
+/-- The lattice point of `0` is `0`. -/
+@[simp]
+theorem point_zero : Γ.point 0 = 0 := by
+  simp [point]
+
 /-- The first coordinate of `m b₀ + n b₁` is `m`. -/
 @[simp]
 theorem inner_point_dual_b₀ (p : ℤ × ℤ) : ⟪Γ.point p, Γ.dual.b₀⟫ = p.1 := by
@@ -385,10 +399,18 @@ theorem isBounded_cell : Bornology.IsBounded Γ.cell := by
   exact ZSpan.fundamentalDomain_isBounded _
 
 /-- The translates of the cell by the points of `Γ` tile the plane. -/
-theorem isAddFundamentalDomain_cell (μ : Measure Plane := by volume_tac) :
+theorem isAddFundamentalDomain_cell' (μ : Measure Plane) :
     IsAddFundamentalDomain Γ.points Γ.cell μ := by
   rw [cell_eq_fundamentalDomain]
   exact ZSpan.isAddFundamentalDomain Γ.basis μ
+
+/-- The translates of the cell by the points of `Γ` tile the plane (for Lebesgue measure). -/
+theorem isAddFundamentalDomain_cell : IsAddFundamentalDomain Γ.points Γ.cell :=
+  Γ.isAddFundamentalDomain_cell' volume
+
+/-- Translation by lattice vectors preserves translation-invariant measures. -/
+instance (μ : Measure Plane) [μ.IsAddLeftInvariant] : VAddInvariantMeasure Γ.points Plane μ :=
+  inferInstanceAs (VAddInvariantMeasure Γ.points.toAddSubmonoid Plane μ)
 
 /-- Every point of the plane is uniquely `x = y + v` with `y` in the cell and `v ∈ Γ`. -/
 theorem existsUnique_sub_mem_cell (x : Plane) : ∃! v : Γ.points, x - v ∈ Γ.cell := by

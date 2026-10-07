@@ -7,6 +7,7 @@ module
 
 public import TriangularLattice.Statement
 public import TriangularLattice.Basic.Lattice
+public import TriangularLattice.Basic.Torus
 public import TriangularLattice.Main
 
 /-!
