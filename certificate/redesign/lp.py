@@ -118,7 +118,7 @@ class Construction:
                 rhs[2 * i, 1] = -L[lead]
                 rhs[2 * i + 1, 1] = -dL[lead]
             self.mats[par] = (Mt, rhs, js)
-            X = Mt.solve(rhs)
+            X = Mt.solve(rhs, algorithm="precond")   # preconditioned (Rump-type) = the Lean strategy
             for c, j in enumerate(js):
                 Pl[j] = X[c, 0]
                 Fl[par][j] = X[c, 1]
