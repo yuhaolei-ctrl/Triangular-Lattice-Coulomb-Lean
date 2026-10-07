@@ -69,7 +69,7 @@ def lean_source_files(root: Path) -> list[Path]:
     for directory, subdirectories, names in os.walk(root, followlinks=False):
         subdirectories[:] = sorted(
             name for name in subdirectories
-            if name not in {".git", ".lake"} and not (Path(directory) / name).is_symlink()
+            if name not in {".git", ".lake", "kernelbench"} and not (Path(directory) / name).is_symlink()
         )
         for name in sorted(names):
             path = Path(directory) / name
