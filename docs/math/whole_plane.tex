@@ -1,0 +1,350 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+\usepackage{xcolor}
+
+\numberwithin{equation}{section}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{convention}[theorem]{Convention}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\lat}{\ell}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\dvg}{\operatorname{div}}
+\newcommand{\curl}{\operatorname{curl}}
+\newcommand{\lo}{\mathrm{lo}}
+\newcommand{\hi}{\mathrm{hi}}
+\newcommand{\spec}{\mathrm{spec}}
+\newcommand{\nn}{\mathrm{nn}}
+\newcommand{\bad}{\mathrm{bad}}
+\newcommand{\sm}{\mathrm{sm}}
+\newcommand{\Lip}{\operatorname{Lip}}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\Cc}[1]{C_{\mathrm{#1}}}
+\newcommand{\Nc}[1]{N_{\mathrm{#1}}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\fR}{\mathsf{R}}
+\newcommand{\Bd}{\mathrm{Bd}}
+\newcommand{\CP}{\mathrm{CP}}
+\newcommand{\ms}[1]{\textup{[M,~#1]}}
+
+\title[A whole-plane route to the lower bound]{From the rigidity theorem to the main theorem without periodic approximation: a whole-plane Theorem~A and an explicit localization}
+\date{October 2026}
+
+\begin{document}
+\begin{abstract}
+We give a route from the rigidity theorem (Theorem~A) of the manuscript \emph{The triangular lattice minimizes the two-dimensional Coulomb renormalized energy} to its main theorem, the lower bound $W_U(E)\ge\pi R_\Lam$ for every admissible field $E$, which does not use the periodic approximation (screening) theorem of Sandier--Serfaty, the existence of minimizers, or any torus other than $\R^2/\Lam$.  Part~I restates Theorem~A for a finite configuration in a square with a background, with an explicit boundary error $\Bd$ (Theorem~\ref{thm:Aprime}).  Part~II localizes an arbitrary admissible field with finite energy: smearing with cutoff-adapted radii (which makes all cutoff-gradient errors absorbable and removes every need for a priori growth bounds), tiling the plateau by squares with an averaged offset, closing the field in each square by an explicit boundary-layer field, projecting onto gradient fields, and recombining the smeared pair interactions into point interactions by Newton's theorem.  The document is a blueprint for the Lean formalization: every estimate is explicit and every limit exchange is justified.
+\end{abstract}
+\maketitle
+\tableofcontents
+
+%======================================================================
+\section{Introduction and overview}\label{sec:intro}
+%======================================================================
+
+\subsection{References to the manuscript}
+``The manuscript'' is the \texttt{v2\_current} version of the paper; we cite it as \ms{\S n}, \ms{(n.m)}, \ms{Lemma~x}, using the labels of its source (for instance \ms{Proposition~3.4} is \texttt{prop:decomposition}, \ms{(5.badcounts)} is \texttt{eq:badcounts}).  We use its notation for the auxiliary function: $(q,\chi)$ is an admissible pair with parameters $(t_a,t_b,\gamma)$ \ms{Definition~3.1}, $a=\frac1{2\pi|k|^2}-\widehat q$, $q=q_\lo+q_\hi$, $a=a_\lo+a_\hi$, $K_0=\mathcal F^{-1}a_\hi$, $V=q_\hi+K_0$, $K$ the tail size \ms{(3.K)}, $c_q$ the constant of \ms{Proposition~3.2(b)}, $t_V=\sum_{\lambda\in\Lam\setminus\{0\}}V(\lambda)$ and
+\begin{equation}\label{eq:RLam}
+R_\Lam=c_q-\tfrac12+K_0(0)+t_V\qquad\text{\ms{Proposition~3.4}}.
+\end{equation}
+The cutoff $\chi$ of the admissible pair is a function on $[0,\infty)$; to avoid a clash with the cutoff families of the main theorem we write it $\chi^{\mathrm{aux}}$ whenever confusion is possible.  The filter scale of \ms{\S6} is written $\fR$ (the manuscript writes $R$), since $R$ denotes the size of $U_R$.  All constants named $C_{\mathrm{xyz}}$, $c_{\mathrm{hole}}$, $A_\eta$, $A_K$, \dots\ are those of the manuscript \ms{Appendix~C}.
+
+\subsection{The statement to be proved}
+Let $g(x)=-\log|x|$.  An \emph{admissible field} is a pair $(\mathcal C,E)$, $\mathcal C\subset\R^2$ locally finite with
+\begin{equation}\label{eq:density}
+n(B_r):=\#(\mathcal C\cap B_r)\le D_0\,\pi r^2\qquad(r\ge1)
+\end{equation}
+for some $D_0<\infty$, and $E\in L^1_{\mathrm{loc}}(\R^2;\R^2)$ with $\dvg E=2\pi(\nu-1)$, $\curl E=0$ in the sense of distributions, $\nu=\sum_{p\in\mathcal C}\delta_p$.  For a compactly supported Lipschitz $\chi\ge0$,
+\begin{equation}\label{eq:Wchi}
+W(E,\chi)=\lim_{\alpha\downarrow0}\Big[\frac12\int_{\R^2\setminus\bigcup_pB(p,\alpha)}\chi|E|^2+\pi\log\alpha\sum_p\chi(p)\Big].
+\end{equation}
+$U_R$ is the disc $B_R$ or the square $(-R/2,R/2)^2$.  A \emph{cutoff family of width $L>0$} is a family $(\chi_R)_{R>0}$ of functions $\R^2\to[0,1]$, all $\Lambda_\chi$-Lipschitz for one $\Lambda_\chi<\infty$, with $\overline{\{\chi_R\ne0\}}\subset U_R$ and $\chi_R(x)=1$ whenever $x\in U_R$ and $\dist(x,\partial U_R)\ge L$.  (This is \texttt{IsCutoffFamily} of \texttt{Challenge.lean}.)  Since $\chi_R$ vanishes on $\partial U_R$ and equals one at points at distance $L$ from it, $\Lambda_\chi\ge1/L$ as soon as $U_R$ contains such points.
+
+\begin{theorem}[main lower bound]\label{thm:main}
+For every admissible $(\mathcal C,E)$, every $L>0$ and every cutoff family of width $L$ for discs or for squares,
+\[
+\limsup_{R\to\infty}\frac{W(E,\chi_R)}{|U_R|}\ \ge\ \pi R_\Lam .
+\]
+\end{theorem}
+
+The value $W_U(E_\Lam)=\pi R_\Lam$ is \ms{Lemma~11.periodic-cutoff} and is not discussed here.  We shall in fact prove more: if the $\limsup$ is finite then $\liminf_{R\to\infty}W(E,\chi_R)/|U_R|\ge\pi R_\Lam$ (Theorem~\ref{thm:mainstrong}).
+
+\subsection{Architecture}
+\begin{enumerate}[label=\textbf{Step~\arabic*.},leftmargin=*]
+\item \textbf{Theorem A$'$} (Part~I).  For a finite set $P$ in an open square $Q$ of side $s$, a background $\beta=1_Q-\beta'$ with $\beta'\in L^1\cap L^\infty$ compactly supported and $\int\beta=\#P$, and the neutral measure $\rho=\sum_{p\in P}\delta_p-\beta$, the renormalized Coulomb energy $\cE(\rho)$ (point self-energies excluded, Definition~\ref{def:energy}) satisfies
+\[
+\cE(\rho)=\#P\,R_\Lam+\cL(\rho)+\big[T_V(P)-\#P\,t_V\big]+\cB(P,\beta)
+\]
+exactly (Proposition~\ref{prop:planedecomp}), and Theorem~A$'$ gives $\cE(\rho)\ge\#P\,R_\Lam+\frac14\cL(\rho)-\Bd$ with
+\[
+\Bd=A_\Bd\,s+5\norm{\beta'}_{L^1}+4\norm{\beta'}_{L^2}^2+\#\{p\in P:\dist(p,\partial Q)<\fR/16+2\}.
+\]
+\item \textbf{Cutoff-adapted smearing} (\S\ref{sec:smearing}--\S\ref{sec:monotone}).  Each charge $p$ is smeared over a $C^1$ radial bump of radius $\eta_p=\min(\eta_*,c_0\chi(p)/\Lambda_\chi)$.  The smeared field $E_{\vec\eta}$ is $C^1$, the weighted monotonicity identity holds exactly, and \emph{because the radii are proportional to $\chi$ near the edge of the cutoff}, every error term containing $\nabla\chi$ is absorbed by the energy and the close-pair term, at a cost of a constant per charge in the transition strip.  This removes the circularity which an a priori bound on $\int|E_\eta|^2$ near $\partial U_R$ would otherwise require.
+\item \textbf{A priori bounds} (\S\ref{sec:apriori}), for every large $R$: plateau energy and close pairs $O(R^2)$, discrepancy and strip counts $O(R^{3/2})$.
+\item \textbf{Tiling} (\S\ref{sec:tiling}) by squares of side $s$, with an offset chosen by averaging.
+\item \textbf{Closure and projection} (\S\ref{sec:closure}): in each tile the field $E_{\eta_*}1_Q+Y$, $Y$ an explicit field in a displaced layer, has divergence $2\pi\rho_Q$; projecting onto gradient fields bounds its energy below by $\pi\iint g\,d\rho_Qd\rho_Q$; Newton's theorem converts smeared pair energies plus close-pair terms into point interactions.
+\item \textbf{Assembly} (\S\ref{sec:assembly}).
+\end{enumerate}
+
+\subsection{Conventions}\label{sec:conventions}
+$|\cdot|$ is the Euclidean norm, $B(x,r)$ the open disc, $|A|$ Lebesgue measure, $\widehat f(k)=\int f(x)e^{-2\pi ik\cdot x}dx$, $\widehat\mu(k)=\int e^{-2\pi ik\cdot x}d\mu$ for finite measures.  For a finite set $P$ and a set $A$, $n_P(A)=\#(P\cap A)$.  Sums $\sum_{p\ne p'}$ are over ordered pairs of distinct points.  ``Measurable'' means Borel.  A function $u$ on $\R^2$ is \emph{radial} if $u(x)$ depends only on $|x|$.  For a Lipschitz $\chi$ we use its a.e.\ gradient (Rademacher), $|\nabla\chi|\le\Lip(\chi)$ a.e.
+
+\begin{lemma}[integration by parts against Lipschitz functions]\label{lem:ibp}
+\textup{(a)} Let $X\in L^1_{\mathrm{loc}}(\R^2;\R^2)$ have distributional divergence equal to a locally finite signed Borel measure $\mu$, and let $\psi$ be Lipschitz with compact support.  Then $\int X\cdot\nabla\psi=-\int\psi\,d\mu$.  \textup{(b)} If $X\in C^1(\overline{Q})$ on a closed axis-parallel rectangle $\overline Q$ with outward normal $n$ and $\psi\in C^1(\overline Q)$, then $\int_QX\cdot\nabla\psi=-\int_Q\psi\dvg X+\oint_{\partial Q}\psi X\cdot n$.
+\end{lemma}
+\begin{proof}
+(a) Let $\rho_\epsilon$ be a standard mollifier and $\psi_\epsilon=\psi*\rho_\epsilon\in C_c^\infty$.  The identity holds for $\psi_\epsilon$ by definition.  $\psi_\epsilon\to\psi$ uniformly with supports in a fixed compact set, so $\int\psi_\epsilon d\mu\to\int\psi d\mu$.  $\nabla\psi_\epsilon=(\nabla\psi)*\rho_\epsilon$ (the a.e.\ gradient of a Lipschitz function is its weak gradient), $|\nabla\psi_\epsilon|\le\Lip(\psi)$, and $\nabla\psi_\epsilon\to\nabla\psi$ a.e.\ by the Lebesgue differentiation theorem; dominated convergence with majorant $\Lip(\psi)|X|1_{K}$ gives $\int X\cdot\nabla\psi_\epsilon\to\int X\cdot\nabla\psi$.  (b) is the divergence theorem on a box applied to $\psi X$ (in Mathlib: \texttt{integral\_divergence\_of\_hasFDerivWithinAt\_off\_countable} on \texttt{Set.Icc}).
+\end{proof}
+
+\begin{lemma}[smooth representative]\label{lem:rep}
+For an admissible field there is a field $\tilde E$ with $\tilde E=E$ a.e., $\tilde E\in C^\infty(\R^2\setminus\mathcal C)$, and for each $p\in\mathcal C$ and $r_p>0$ with $\overline{B(p,r_p)}\cap\mathcal C=\{p\}$, $\tilde E(x)=\frac{x-p}{|x-p|^2}-\pi(x-p)+\nabla h_p(x)$ on $B(p,r_p)\setminus\{p\}$ with $h_p$ harmonic on $B(p,r_p)$.  $W(E,\chi)=W(\tilde E,\chi)$ for every $\chi$, and the limit \eqref{eq:Wchi} exists.
+\end{lemma}
+\begin{proof}
+This is \ms{\S2.4}; changing $E$ on a null set changes no integral.  On a disc $D$ disjoint from $\mathcal C$, $E+\pi x$ is curl- and divergence-free, hence its components are harmonic distributions, hence smooth (Weyl); the representatives on overlapping discs agree, which defines $\tilde E$ off $\mathcal C$.
+\end{proof}
+From now on $E$ denotes this representative.
+
+\begin{lemma}[transition strips]\label{lem:strip}
+Let $S_R=\{x\in U_R:\dist(x,\partial U_R)<L\}$.  For every cutoff family of width $L$: $\chi_R=1$ on $U_R\setminus S_R$, $\chi_R=0$ off $U_R$, and $\nabla\chi_R=0$ a.e.\ outside $S_R$.  For $x\in\R^2$, $\{R>0:\dist(x,S_R)<a\}$ is contained in an interval of length $L+2a$ \textup{(}discs\textup{)} or $2L+4a$ \textup{(}squares\textup{)}.  For $R'\ge R+2L$ \textup{(}squares\textup{)} or $R'\ge R+L$ \textup{(}discs\textup{)}, $\chi_{R'}=1$ on $U_R$ and $\chi_{R'}-\chi_R\ge0$.
+\end{lemma}
+\begin{proof}
+The first two assertions are the definition.  A Lipschitz function which is constant on an open set has zero gradient there; $U_R\setminus\overline{S_R}$ and $\R^2\setminus\overline{U_R}$ are open and $\partial S_R\cup\partial U_R$ is a finite union of circles or segments, a null set.  For discs $\dist(x,\partial U_R)=\big||x|-R\big|$ and $x\in S_R$ iff $R\in(|x|,|x|+L)$; enlarging by $a$ gives an interval of length $L+2a$.  For squares $\dist(x,\partial U_R)=R/2-|x|_\infty$ on $U_R$ and $x\in S_R$ iff $R\in(2|x|_\infty,2|x|_\infty+2L)$; enlarging by $a$ in the plane changes $2|x|_\infty$ by at most $2a$.  The last assertion: for squares, $x\in U_R$ has $\dist(x,\partial U_{R'})=R'/2-|x|_\infty>(R'-R)/2\ge L$.
+\end{proof}
+Only these properties of the family are used; nothing else about $\chi_R$ enters.
+
+%======================================================================
+\part{Whole-plane Theorem A}
+%======================================================================
+
+\section{The whole-plane LP decomposition}\label{sec:planedecomp}
+
+\begin{definition}[configurations with background; renormalized energy]\label{def:energy}
+A \emph{configuration with background} is a pair $(P,\beta)$, $P\subset\R^2$ finite with $n=\#P$, $\beta\in L^1(\R^2)\cap L^\infty(\R^2)$ real with compact support and $\int\beta=n$.  Put $\nu=\sum_{p\in P}\delta_p$, $\rho=\nu-\beta$ (a neutral finite signed measure of compact support) and
+\begin{equation}\label{eq:energy}
+\cE(\rho)=\sum_{p\ne p'}g(p-p')-2\sum_{p\in P}(g*\beta)(p)+\iint g(x-y)\beta(x)\beta(y)\,dx\,dy .
+\end{equation}
+All terms are finite: $g\in L^1_{\mathrm{loc}}$, so $g*\beta$ is continuous and bounded on compact sets, and $\iint|g(x-y)||\beta(x)||\beta(y)|<\infty$.
+\end{definition}
+
+\begin{lemma}[the renormalized kernel]\label{lem:Kdef}
+Let $(q,\chi^{\mathrm{aux}})$ be admissible.  For $x\in\R^2$ put
+\begin{equation}\label{eq:Kdef}
+\mathsf K(x)=\int_{\R^2}a(k)\big(e^{2\pi ik\cdot x}-1\big)\,dk .
+\end{equation}
+The integral converges absolutely, $\mathsf K$ is continuous, real and radial, $\mathsf K(0)=0$, $|\mathsf K(x)|\le C_{\mathsf K}+2\log(1+|x|)$ with $C_{\mathsf K}=4\pi+2\int_{|k|>1}a(k)\,dk$, and
+\begin{equation}\label{eq:gqK}
+g(x)=q(x)+\mathsf K(x)-c_q\qquad(x\ne0).
+\end{equation}
+\end{lemma}
+\begin{proof}
+\emph{Convergence.}  By \ms{Proposition~3.2(a)}, $a(k)=\frac{e^{-t/2}}t[1-t(TP)(t)]$, $t=2\pi|k|^2$; so $0\le a(k)\le\frac1{2\pi|k|^2}$ for $|k|\le1$ ($|\widehat q|\le\frac12$ and $a\le\frac1{2\pi|k|^2}+\frac12$; we only need $a(k)\le\frac1{2\pi|k|^2}+\frac12$) and $a$ has Gaussian decay.  Since $|e^{2\pi ik\cdot x}-1|\le\min(2,2\pi|k||x|)$, the integrand is bounded by $(\frac1{2\pi|k|^2}+\frac12)2\pi|k||x|$ on $|k|\le1$, integrable, and by $2a(k)$ on $|k|\ge1$, integrable.  Continuity follows by dominated convergence, $\mathsf K(0)=0$ trivially, reality and radiality from $a(k)=a(-k)$ and the radiality of $a$.
+\emph{Growth.}  Split $|k|\le1/(1+|x|)$, $1/(1+|x|)<|k|\le1$, $|k|>1$: the three parts are at most $\int_{|k|\le1/(1+|x|)}(\frac1{2\pi|k|^2}+\frac12)2\pi|k||x|\,dk\le2\pi|x|/(1+|x|)+\pi$, $2\int_{1/(1+|x|)<|k|\le1}(\frac1{2\pi|k|^2}+\frac12)dk\le2\log(1+|x|)+\pi$, and $2\int_{|k|>1}a$.  The sum is at most $4\pi+2\log(1+|x|)+2\int_{|k|>1}a$.
+\emph{Identity.}  Let $h=g-q-\mathsf K$ on $\R^2\setminus\{0\}$.  By \ms{Proposition~3.2(b)}, $g-q\to-c_q$ at $0$, so $h$ extends continuously to $\R^2$ with $h(0)=-c_q$; $h$ is radial and locally integrable.  For $\varphi\in C_c^\infty$: $\int g\Delta\varphi=-2\pi\varphi(0)$ (fundamental solution); $\int q\Delta\varphi=\int\widehat q(k)(-4\pi^2|k|^2)\widehat\varphi(-k)\,dk$ (Parseval, $q\in L^1$); and, by Fubini (justified by the absolute convergence above and $\Delta\varphi\in L^1$ with $\int|x||\Delta\varphi|<\infty$), using $\int\Delta\varphi=0$,
+\[
+\int\mathsf K\Delta\varphi=\int a(k)\int e^{2\pi ik\cdot x}\Delta\varphi(x)\,dx\,dk=\int a(k)(-4\pi^2|k|^2)\widehat\varphi(-k)\,dk=-\int\big(2\pi-4\pi^2|k|^2\widehat q(k)\big)\widehat\varphi(-k)\,dk ,
+\]
+which equals $-2\pi\varphi(0)-\int q\Delta\varphi$ (the integrals converge separately since $|k|^2\widehat q$ is bounded by \ms{Proposition~3.2(a)} and $\widehat\varphi$ is Schwartz).  Hence $\int h\Delta\varphi=0$: $h$ is weakly harmonic, hence (Weyl) equal a.e.\ to a harmonic function, and, being continuous, equal to it everywhere.  A radial harmonic function is constant: by the mean value property $h(0)$ is the average of $h$ on $\partial B(0,r)$, which is $h(r)$.  So $h\equiv-c_q$.
+\end{proof}
+
+\begin{definition}[slack, tail energy, auxiliary potential]\label{def:planeslack}
+For a configuration with background,
+\begin{gather*}
+\cL_{\mathrm{real}}(P)=\sum_{p\ne p'}q_\lo(p-p'),\qquad\cL_\spec(\rho)=\int_{\R^2}a_\lo(k)|\widehat\rho(k)|^2dk,\qquad\cL(\rho)=\cL_{\mathrm{real}}+\cL_\spec,\\
+T_V(P)=\sum_{p\ne p'}V(p-p'),\qquad\Psi=q+K_0=q_\lo+V,\qquad\gamma_\beta=1-\beta .
+\end{gather*}
+\end{definition}
+$\cL_\spec$ is finite: $a_\lo$ is bounded by $\frac1{2\pi|k|^2}+\frac12$ and supported in $\{2\pi|k|^2\le t_b\}$, and $|\widehat\rho(k)|\le2\pi|k|\int|x|\,d|\rho|$ because $\widehat\rho(0)=0$.  Both parts of $\cL$ are nonnegative.  $\Psi\in L^1$ with $\int\Psi=\frac12$: $\int q=\frac12$ \ms{Proposition~3.2(a)}, and $K_0=V-q_\hi$ is integrable (by \ms{(3.K)}, $|V|\le K(1+|x|)^{-20}$, and $q_\hi\le q$) with $\int K_0=a_\hi(0)=0$.  Moreover
+\begin{equation}\label{eq:Psinorms}
+\norm\Psi_{L^1}\le2,\qquad M_1(\Psi):=\int|\Psi(z)||z|\,dz\le2\int q(z)|z|\,dz+1=:2C^{(1)}_q+1,
+\end{equation}
+since $|K_0|\le K w+q_\hi$, $w(x)=(1+|x|)^{-20}$, $\norm w_{L^1}=\frac{2\pi}{18\cdot19}$, $\int w(z)|z|dz\le1$, and $K\le1$.  ($C^{(1)}_q<\infty$ by the Gaussian decay of $q$; its value is irrelevant.)
+
+\begin{proposition}[whole-plane decomposition]\label{prop:planedecomp}
+For every configuration with background,
+\begin{equation}\label{eq:planedecomp}
+\cE(\rho)-nR_\Lam=\cL(\rho)+\big[T_V(P)-n\,t_V\big]+\cB(P,\beta),\qquad\cB(P,\beta)=2\sum_{p\in P}(\Psi*\gamma_\beta)(p)-\int(\Psi*\gamma_\beta)\beta .
+\end{equation}
+\end{proposition}
+\begin{proof}
+Insert \eqref{eq:gqK} into \eqref{eq:energy}.  The constant $-c_q$ contributes $-c_q[n(n-1)-2n\cdot n+n^2]=nc_q$, using $\int\beta=n$.  The $\mathsf K$-terms, with the diagonal $n\mathsf K(0)=0$ added, form $\iint\mathsf K(x-y)\,d\rho(x)d\rho(y)$; by Fubini (majorant $a(k)\min(2,2\pi|k|\operatorname{diam}\supp\rho)$ against $|\rho|\otimes|\rho|$) this is $\int a(k)\big[|\widehat\rho(k)|^2-|\rho(\R^2)|^2\big]dk=\int a|\widehat\rho|^2$.  Split $a=a_\lo+a_\hi$; since $a_\hi\in L^1$ with inverse transform $K_0$ (bounded, continuous), $\int a_\hi|\widehat\rho|^2=\iint K_0(x-y)d\rho d\rho=nK_0(0)+\sum_{p\ne p'}K_0(p-p')-2\sum_p(K_0*\beta)(p)+\iint K_0\beta\beta$.  Split $q=q_\lo+q_\hi$ in the $q$-terms.  Collecting,
+\[
+\cE(\rho)=n\big(c_q+K_0(0)\big)+\cL(\rho)+T_V(P)-2\sum_p(\Psi*\beta)(p)+\iint\Psi(x-y)\beta(x)\beta(y).
+\]
+Since $\Psi\in L^1$, $\int\Psi=\frac12$ and $\gamma_\beta\in L^\infty$, $\Psi*\beta=\frac12-\Psi*\gamma_\beta$ everywhere; hence $-2\sum_p(\Psi*\beta)(p)=-n+2\sum_p(\Psi*\gamma_\beta)(p)$ and $\iint\Psi\beta\beta=\int(\Psi*\beta)\beta=\frac n2-\int(\Psi*\gamma_\beta)\beta$ ($\Psi$ is even).  Use \eqref{eq:RLam}.
+\end{proof}
+
+\begin{remark}
+For $\beta=1$ on a torus, $\gamma_\beta=0$ and \eqref{eq:planedecomp} is \ms{(3.W-minus-R)}; the proof is the same computation with Plancherel in place of Parseval, and $\cB$ collects exactly what the absence of periodicity costs.
+\end{remark}
+
+\section{Statement of Theorem A$'$}\label{sec:Aprime}
+
+Throughout Part~I, $(q,\chi^{\mathrm{aux}})$ is admissible with parameters $(t_a,t_b,\gamma)$ and tail size $K$, $\fR\ge\fR_0:=R_0$ and $0<\varepsilon\le\min(\varepsilon_{\mathrm{geo}},\varepsilon_0(\fR))$ as in \ms{(6.thresholds)}, and
+\begin{equation}\label{eq:rb}
+r_b:=(t_b/2\pi)^{1/2},\qquad\text{so that }\supp q_\lo\subset\overline{B(0,r_b)} .
+\end{equation}
+Define the modified defect constant
+\begin{equation}\label{eq:Cdefprime}
+\Cc{def}'(\fR,\varepsilon,\gamma)=\max\Big\{\frac{64\fR^2}{c_{\mathrm{hole}}},\ \frac12\Big[\frac{2\fR^2}{c_{\mathrm{hole}}}\cdot\frac{64\Cc{rem}+4\Cc{shr}C_\kappa+4\Cc{or}\fR^{-10}}{\gamma\varepsilon^2}+\frac1\gamma+\frac{4}{\gamma\varepsilon^2}\Big]\Big\}\ \le\ 2\,\Cc{def}(\fR,\varepsilon,\gamma),
+\end{equation}
+which differs from \ms{(6.Cdef)} only by $32\to64$ in the first entry, and the constant
+\begin{equation}\label{eq:AM}
+A_M=10^4 .
+\end{equation}
+
+\begin{theorem}[Theorem A$'$]\label{thm:Aprime}
+Assume
+\begin{equation}\label{eq:hypA}
+\big(2\Cc{tail}+\Cc{res}\big)\,\Cc{def}'(\fR,\varepsilon,\gamma)\,K\le\tfrac12 .
+\end{equation}
+Let $Q$ be an open axis-parallel square of side $s\ge1$, $(P,\beta)$ a configuration with background, $P\subset Q$, $\beta=1_Q-\beta'$ with $\beta'\in L^1\cap L^\infty$ of compact support, and put $N_\partial(D)=\#\{p\in P:\dist(p,\partial Q)<D\}$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item \textup{(tail defect)}
+\[
+\big|T_V(P)-n\,t_V\big|\le\tfrac12\cL(\rho)+\Bd_A,\qquad\Bd_A=\norm{\beta'}_{L^2}^2+4A_M^2\,\fR\,s+N_\partial(\fR/16+2).
+\]
+\item \textup{(energy)} If moreover $\gamma_\beta=1-\beta\ge0$ a.e.\ on $\bigcup_{p\in P}B(p,r_b)$, then
+\[
+\cE(\rho)\ \ge\ n\,R_\Lam+\tfrac14\cL(\rho)-\Bd,\qquad\Bd=A_\Bd\,s+5\norm{\beta'}_{L^1}+4\norm{\beta'}_{L^2}^2+N_\partial(\fR/16+2),
+\]
+with $A_\Bd=4A_M^2\fR+\sqrt2\,(2C^{(1)}_q+1)+1$.
+\end{enumerate}
+\end{theorem}
+
+Numerically, with the pair of \ms{Corollary~10.admissible}, $\fR=R_0$, $\varepsilon=\varepsilon_0(R_0)$: by \ms{Appendix~C}, $(2\Cc{tail}+\Cc{res})\Cc{def}K\le3.07\cdot10^{-77}$, so the left side of \eqref{eq:hypA} is at most $6.2\cdot10^{-77}$.  The hypothesis of the manuscript's Theorem~A is thus replaced by \eqref{eq:hypA}, which holds with the same margin up to a factor two.
+
+\begin{remark}[what is $o(s^2)$]\label{rem:regime}
+In Part~II, $\fR$, $\varepsilon$, $q$ are fixed, $\beta'=\tau_Q+\sigma_Q$ is the sum of partial smeared charges near $\partial Q$ and of a layer density outside $Q$ of width $w=\sqrt s$, and on average over the tiles $\norm{\beta'}_{L^1}=O(s)$, $\norm{\beta'}_{L^2}^2=O(s^{1/2}+s)$ and $N_\partial(\fR/16+2)=O(s)$; so $\Bd=O(s)=o(s^2)$ per tile.  Only sums over tiles are ever needed, and all terms of $\Bd$ are additive.
+\end{remark}
+
+\begin{remark}[on the sign hypothesis in (ii)]
+The hypothesis $\gamma_\beta\ge0$ near $P$ is what lets the short-range part $q_\lo$ of $\Psi$ be discarded in $\cB$ without any control of local clustering of $P$ near $\partial Q$.  It holds in Part~II because the closing layer is placed at distance $d_0>r_b$ from $Q$ (Definition~\ref{def:Y}); a layer adjacent to $Q$ would require bounds on $\sum_p(q_\lo*\sigma_Q)(p)$, i.e.\ on clusters near the grid, which we avoid.
+\end{remark}
+
+\section{The local lemmas in the plane}\label{sec:local}
+
+Fix a finite $P\subset\R^2$.  All definitions of \ms{\S5} are made for $P$ itself instead of the lifted set $P+\Gamma$: bad pairs, the retained set $G$, $N_\bad$, $B$, $M_G$, nearest neighbors and edges, deficient points and their number $D$, $Q_{\mathrm{sum}}$ (the manuscript's $Q$ of \ms{(5.QS)}, renamed to avoid a clash with squares), $S$, $S_\nn$, the slots and directional errors, $\kappa_p$, $\mathrm{cell}(p)$, the hole balls, $\nu_\bad=\sum_{p\text{ removed}}\delta_p$, $n_C=\nu_\bad*1_C$, $f_C=n_C/a_C$ and $J_C=a_C^{-1}\int_{\R^2}n_C^2$.  ``Per period'' becomes ``in total''; every sum is finite.
+
+\begin{lemma}[transcription]\label{lem:transcription}
+With these definitions the following statements of the manuscript hold verbatim, with the same constants, sums over a period replaced by finite sums over $P$, $G$ or the nearest edges of $G$, and $L^2(\R^2/\Gamma)$ replaced by $L^2(\R^2)$:
+\ms{Lemma~5.badcounts} with $\cL_{\mathrm{real}}\ge2Q_{\mathrm{sum}}$ in place of the last inequality; \ms{Lemmas~5.threeshell, 5.directional, 5.cells, 5.holes, 5.occupancy}; \ms{Lemma~6.separated} (on $\R^2$); \ms{Lemma~6.removedmass} (Young's inequality on $\R^2$); \ms{Lemma~6.kernel} and \ms{Appendix~B}; \ms{Lemma~6.edgediff} as an identity of functions of $k\in\R^2$ (the lifting remarks become void); \ms{Lemma~6.orient}; \ms{Lemma~7.development}; \ms{Corollary~7.counts}; \ms{Lemmas~8.badanchors, 8.truss, 8.expansion, 8.Gamma}, \ms{Proposition~8.cancellation} and \ms{Lemma~8.tail}; \ms{Lemma~9.restore}.  Consequently \ms{Proposition~4.tailquad} holds:
+\begin{equation}\label{eq:tailquad}
+\big|T_V(P)-n\,t_V\big|\le2\Cc{tail}K\,(S_\nn+D)+\Cc{res}K\,J_C .
+\end{equation}
+\end{lemma}
+\begin{proof}
+We list, for each item, the only place where periodicity is mentioned and why the plane version holds.
+\begin{itemize}
+\item \ms{\S5}: all statements are about finitely many points at bounded distances; ``choices are made once per $\Gamma$-orbit'' is void.  In \ms{Lemma~5.badcounts}, $\cL_{\mathrm{real}}=\sum_{p\ne p'}q_\lo(p-p')\ge\sum_{p\ne p',|p-p'|\le\rho_0\lat}q(p-p')=2Q_{\mathrm{sum}}$ by \ms{Proposition~3.2(c)} and $q_\lo\ge0$.  \ms{Lemma~5.occupancy}: unfolding is the identity $\int n_C^2=\sum_{p,p'}A_C(p-p')$ over ordered pairs of removed points.
+\item \ms{Lemma~6.separated}: the proof is on $\R^2$; \ms{Lemma~6.removedmass}: $\eta_\fR*\nu_\bad\le2A_\eta\fR^{-2}(w_\fR*f_C)$ pointwise, and Young's inequality on $\R^2$ with $\norm{w_\fR}_{L^1(\R^2)}=I_4\fR^2$.
+\item \ms{Lemma~6.edgediff}: for every $k\in\R^2$, \ms{(6.59)} holds, and the regrouping of the slot terms into edge terms is a finite rearrangement; $\mathcal R(k)=\sum_{p\in G}\widehat\eta(\fR k)r_{\theta_p}(k)e^{-2\pi ik\cdot p}$ is the Fourier transform of the $L^1\cap L^2$ function $\sum_{p\in G}\mathcal F^{-1}[\widehat\eta(\fR\cdot)r_{\theta_p}](\cdot-p)$.  \ms{Lemma~6.orient}: Plancherel on $\R^2$ and \ms{(6.54)} on $\R^2$; the parent rule for edges is any rule assigning each nearest edge to one of its endpoints.
+\item \ms{\S7}: the hypotheses concern the physical plane only.  In \ms{Corollary~7.counts} the counts are finite sums over $G$ and the sentence on enlarging the period is void.
+\item \ms{\S8}: the sums over anchors are finite; the regrouping \ms{(8.Cf)} is a rearrangement of a finite sum; \ms{Lemma~8.Gamma} concerns $\Lam$ only.  In the proof of \ms{Lemma~8.tail} the quantity $\sum_f\delta_f$ is a finite sum over the nearest edges of $G$, the same at every scale, and the scales are summed using the zero stress identity \ms{(3.zerostress)}.
+\item \ms{Lemma~9.restore}: uses the separation of $G$, \ms{(6.53)} on $\R^2$ and Young's inequality on $\R^2$.
+\end{itemize}
+\ms{Proposition~4.tailquad} is \ms{Lemma~8.tail} plus \ms{Lemma~9.restore}, as in \ms{\S9}.
+\end{proof}
+
+The only statement of \ms{\S\S5--9} which does \emph{not} carry over is \ms{Proposition~6.lineardefect}, because points near $\partial Q$ are deficient without any cost in $\cL$ and the coverage identity compares the cells with the background, which is no longer $1$ everywhere.
+
+\section{Fourier coverage with a boundary}\label{sec:coverage}
+
+Let $\cU$ be the indicator of $\R^2\setminus\bigcup_{p\in G}\mathrm{cell}(p)$, let $M(k)=1-c_2|k|^2+c_4|k|^4$ \ms{(6.hexagon-transform)} and let $k_\fR=\mathcal F^{-1}[M(\cdot)\widehat\eta(\fR\,\cdot)]$.
+
+\begin{lemma}[the filtered multiplier kernel]\label{lem:kR}
+For $\fR\ge64$, $k_\fR=\eta_\fR+\frac{c_2}{4\pi^2}\Delta\eta_\fR+\frac{c_4}{16\pi^4}\Delta^2\eta_\fR$, $\int k_\fR=1$, and $|k_\fR(x)|\le A_M\fR^{-2}(1+|x|/\fR)^{-4}$.
+\end{lemma}
+\begin{proof}
+The formula follows from $\widehat{\Delta f}=-4\pi^2|k|^2\widehat f$, and $\int k_\fR=M(0)\widehat\eta(0)=1$.  Write $k_\fR(x)=\fR^{-2}m(x/\fR)$, $m(y)=\int M(\kappa/\fR)\widehat\eta(\kappa)e^{2\pi i\kappa\cdot y}d\kappa$.  On $\supp\widehat\eta\subset[-6,6]^2$ we have $|\kappa|\le9$, $|\kappa|/\fR\le9/64$, hence, using $c_2<10$, $c_4<25$, all partial derivatives of $\kappa\mapsto M(\kappa/\fR)$ of order $\le4$ are bounded by $2$ there.  With \ms{(6.etahat-deriv)} and Leibniz, $\norm{\partial_i^4(M(\cdot/\fR)\widehat\eta)}_\infty\le\sum_{j=0}^4\binom4j\cdot2\cdot16\cdot2^{4-j}=2592$.  The function $M(\cdot/\fR)\widehat\eta$ is $C^{10}$ with compact support, so four integrations by parts in $\kappa_i$ give $|y_i|^4|m(y)|\le(2\pi)^{-4}\cdot144\cdot2592<240$, while $|m|\le144\cdot2=288$.  Since $|y|^4\le4\max_i|y_i|^4$ and $(1+|y|)^4\le8(1+|y|^4)$, $(1+|y|)^4|m(y)|\le8(288+960)<10^4$.
+\end{proof}
+
+\begin{lemma}[coverage identity in the plane]\label{lem:coverageplane}
+With $T=\sum_{p\in G}\eta_\fR*\mathrm{ann}_p$ and $O=\sum_{p\in G}\mathcal F^{-1}[\widehat\eta(\fR\,\cdot)r_{\theta_p}](\cdot-p)$, everywhere on $\R^2$,
+\begin{equation}\label{eq:coverageplane}
+\eta_\fR*\cU=k_\fR*\gamma_\beta-k_\fR*\rho+k_\fR*\nu_\bad+T-O .
+\end{equation}
+\end{lemma}
+\begin{proof}
+The cells have pairwise disjoint interiors \ms{Lemma~5.cells} and null boundaries, so $1=\cU+\sum_{p\in G}1_{\mathrm{cell}(p)}$ a.e., and $1_{\mathrm{cell}(p)}=1_{p+H_{\theta_p}}-\mathrm{ann}_p$.  The finite sum $\sum_{p\in G}1_{p+H_{\theta_p}}$ is in $L^1$ with transform $\sum_{p\in G}e^{-2\pi ik\cdot p}(M(k)+r_{\theta_p}(k))$, so $\eta_\fR*\sum_p1_{p+H_{\theta_p}}=k_\fR*\nu_G+O$ with $\nu_G=\nu-\nu_\bad$ (both sides are continuous $L^1$ functions with the same transform).  Further $k_\fR*\nu=k_\fR*\beta+k_\fR*\rho$ and $\eta_\fR*1=1=k_\fR*1$, so $1-k_\fR*\beta=k_\fR*\gamma_\beta$.  All convolutions are of an $L^1$ kernel with $L^\infty$ functions or finite measures.
+\end{proof}
+
+\begin{lemma}[boundary term of the coverage identity]\label{lem:gammacov}
+If $\beta=1_Q-\beta'$ for an open square $Q$ of side $s$, then $\gamma_\beta=1_{\R^2\setminus Q}+\beta'$ and
+\[
+\norm{k_\fR*\gamma_\beta}_{L^2(Q)}^2\le28A_M^2\,\fR\,s+8\norm{\beta'}_{L^2}^2 .
+\]
+\end{lemma}
+\begin{proof}
+For $x\in Q$ with $d=\dist(x,\partial Q)$, Lemma~\ref{lem:kR} gives $|k_\fR*1_{\R^2\setminus Q}(x)|\le A_M\fR^{-2}\int_{|y|\ge d}(1+|y|/\fR)^{-4}dy\le2\pi A_M\int_{d/\fR}^\infty(1+r)^{-3}dr=\pi A_M(1+d/\fR)^{-2}$.  The set $\{x\in Q:d\in[t,t+dt)\}$ has measure at most $4s\,dt$ (coarea for the $1$-Lipschitz function $d$, or directly), so $\norm{k_\fR*1_{\R^2\setminus Q}}_{L^2(Q)}^2\le4\pi^2A_M^2s\int_0^\infty(1+t/\fR)^{-4}dt=\frac43\pi^2A_M^2\fR s\le14A_M^2\fR s$.  By Plancherel and $|M\widehat\eta(\fR\cdot)|\le2$ on its support, $\norm{k_\fR*\beta'}_{L^2}\le2\norm{\beta'}_{L^2}$.  Use $(a+b)^2\le2a^2+2b^2$.
+\end{proof}
+
+\begin{proposition}[linear defect bound with boundary]\label{prop:lindefplane}
+Let $\fR\ge R_0$, $\varepsilon\le\min(\varepsilon_{\mathrm{geo}},\varepsilon_0(\fR))$, $P\subset Q$, $\beta=1_Q-\beta'$ as above.  Then
+\[
+S_\nn+D+J_C\le\Cc{def}'\,\cL(\rho)+\frac{2\fR^2}{c_{\mathrm{hole}}}\Big(64\norm{\beta'}_{L^2}^2+224A_M^2\fR s\Big)+2N_\partial(\fR/16+2).
+\]
+\end{proposition}
+\begin{proof}
+Split the deficient points into $D_{\mathrm{in}}$, those with $\dist(p,\partial Q)\ge\fR/16+2$, and $D_\partial\le N_\partial(\fR/16+2)$.  For $p$ counted in $D_{\mathrm{in}}$ and a hole center $z$ of $p$, $|z-p|=\lat$, so $B(z,\fR/16)\subset Q$ (as $\lat<2$).  The proof of \ms{Lemma~6.holemass}, with the $L^2$ norm taken over $Q$ and only these hole centers kept (the cross terms are nonnegative, so dropping hole balls only decreases the left side), gives $\norm{\eta_\fR*\cU}_{L^2(Q)}^2\ge c_{\mathrm{hole}}\fR^{-2}D_{\mathrm{in}}$.  Take the $L^2(Q)$ norm of \eqref{eq:coverageplane} grouped as $f_1+f_2+f_3+f_4$ with $f_1=k_\fR*\gamma_\beta-k_\fR*\rho$, $f_2=k_\fR*\nu_\bad$, $f_3=T$, $f_4=-O$, and use $\norm{\sum f_i}^2\le4\sum\norm{f_i}^2$.  As in \ms{(6.511)}, Plancherel on $\R^2$ and $|M\widehat\eta(\fR\cdot)|^2\le4\le4a_\lo$ on the filter support give $\norm{k_\fR*\rho}_{L^2(\R^2)}^2\le4\cL_\spec$; with Lemma~\ref{lem:gammacov}, $\norm{f_1}_{L^2(Q)}^2\le8\cL_\spec+56A_M^2\fR s+16\norm{\beta'}^2_{L^2}$.  The bounds for $f_2,f_3,f_4$ are \ms{(6.511)}, \ms{(6.512)}, \ms{Lemma~6.orient} in the plane, with $D=D_{\mathrm{in}}+D_\partial$.  Hence
+\[
+c_{\mathrm{hole}}\fR^{-2}D_{\mathrm{in}}\le32\cL_\spec+224A_M^2\fR s+64\norm{\beta'}^2_{L^2}+\Big[\frac{64\Cc{rem}}{\gamma\varepsilon^2}+\frac{4\Cc{shr}C_\kappa+4\Cc{or}\fR^{-10}}\gamma\Big]Q_{\mathrm{sum}}+\big[4\Cc{shr}C_\kappa\varepsilon+4\Cc{or}\fR^{-10}\big](D_{\mathrm{in}}+D_\partial).
+\]
+By \ms{(6.thresholds)} the last bracket is at most $\frac12c_{\mathrm{hole}}\fR^{-2}$; absorbing the $D_{\mathrm{in}}$ part,
+\[
+D_{\mathrm{in}}\le\frac{2\fR^2}{c_{\mathrm{hole}}}\Big[32\cL_\spec+\frac{64\Cc{rem}+4\Cc{shr}C_\kappa+4\Cc{or}\fR^{-10}}{\gamma\varepsilon^2}Q_{\mathrm{sum}}+224A_M^2\fR s+64\norm{\beta'}^2_{L^2}\Big]+D_\partial .
+\]
+Add $S_\nn\le S\le Q_{\mathrm{sum}}/\gamma$, $J_C\le4Q_{\mathrm{sum}}/(\gamma\varepsilon^2)$, $D_\partial$, and use $2Q_{\mathrm{sum}}+\cL_\spec\le\cL$ exactly as in the proof of \ms{Proposition~4.defect}; the factor $32$ in front of $\cL_\spec$ (instead of $16$) is why $64$ appears in \eqref{eq:Cdefprime}.
+\end{proof}
+
+\section{Proof of Theorem A$'$}\label{sec:proofA}
+
+\begin{proof}[Proof of (i)]
+By \eqref{eq:tailquad} and Proposition~\ref{prop:lindefplane}, $|T_V(P)-nt_V|\le(2\Cc{tail}+\Cc{res})K\big[\Cc{def}'\cL+\mathrm{Bd}_{\mathrm{def}}\big]$ with $\mathrm{Bd}_{\mathrm{def}}$ the last two terms of the proposition.  By \eqref{eq:hypA} the coefficient of $\cL$ is at most $\frac12$, and $(2\Cc{tail}+\Cc{res})K\le1/(2\Cc{def}')\le c_{\mathrm{hole}}/(128\fR^2)$, so the boundary part is at most $\norm{\beta'}^2_{L^2}+\frac74A_M^2\fR s+\frac{c_{\mathrm{hole}}}{64\fR^2}N_\partial\le\Bd_A$.
+\end{proof}
+
+\begin{lemma}[the background term]\label{lem:Bterm}
+Under the hypotheses of Theorem~\ref{thm:Aprime}\textup{(ii)}, and if $40K\le\gamma\varepsilon^2$,
+\[
+\cB(P,\beta)\ge-\tfrac14\cL(\rho)-\Bd_B,\qquad\Bd_B=\big(\sqrt2M_1(\Psi)+1\big)s+5\norm{\beta'}_{L^1}+3\norm{\beta'}^2_{L^2}.
+\]
+\end{lemma}
+\begin{proof}
+Write $\gamma=\gamma_\beta=1_{Q^c}+\beta'$ and $\Psi=q_\lo+V$, so $\cB=2\sum_p(q_\lo*\gamma)(p)+2\sum_p(V*\gamma)(p)-\int(\Psi*\gamma)\beta$.
+
+\emph{Short range.}  $(q_\lo*\gamma)(p)=\int_{B(p,r_b)}q_\lo(p-y)\gamma(y)dy\ge0$ since $q_\lo\ge0$ and $\gamma\ge0$ a.e.\ on $B(p,r_b)$.
+
+\emph{Tail.}  $|V|\le Kw$, $w(x)=(1+|x|)^{-20}$.  For $p\in Q$, $(w*1_{Q^c})(p)\le\int_{|y|\ge d}w\le2\pi\int_d^\infty(1+r)^{-19}dr=\frac{2\pi}{18}(1+d)^{-18}$ with $d=\dist(p,\partial Q)$.  For the retained points, the discs $B(p,\frac12)$ are disjoint and $(1+d(p))^{-18}\le(\frac32)^{18}(1+d(x))^{-18}$ on them, where $d(x)=\dist(x,\partial Q)$; hence $\sum_{p\in G}(1+d(p))^{-18}\le\frac4\pi(\frac32)^{18}\int_{\R^2}(1+d(x))^{-18}dx\le1900\,s$, because $|\{d\le t\}|\le8st+4\pi t^2$ and, by the layer cake formula, $\int(1+d)^{-18}\le18\int_0^\infty(1+t)^{-19}(8st+4\pi t^2)dt\le s$ for $s\ge1$.  For removed points use $(w*1_{Q^c})\le\norm w_{L^1}\le1$ and $B\le J_C$.  Next, $\sup_x\sum_{p\in G}w(x-p)\le8$ (\ms{(6.53)} with $\fR=\delta=1$, $w\le(1+|x|)^{-4}$), so $\sum_{p\in G}(w*|\beta'|)(p)\le8\norm{\beta'}_{L^1}$; and $\sum_{p\text{ removed}}(w*|\beta'|)(p)=\int|\beta'|\,h$ with $h=\sum_{\text{removed}}w(\cdot-p)$, where, as in the proof of \ms{Lemma~9.restore} applied to $w*w$ (which satisfies $(w*w)(z)\le(\frac54)^{20}(w*w)(z+u)$ for $|u|\le\frac14$),
+\[
+\norm h_{L^2}^2=\sum_{p,p'\text{ removed}}(w*w)(p-p')\le\big(\tfrac54\big)^{20}\norm{w*w}_{L^1}\norm{f_C}_{L^2}^2\le\big(\tfrac54\big)^{20}\norm w_{L^1}^2\cdot100J_C\le3J_C .
+\]
+So $2|\sum_p(V*\gamma)(p)|\le2K\big[700s+J_C+8\norm{\beta'}_{L^1}+\norm{\beta'}_{L^2}(3J_C)^{1/2}\big]\le2K\big[700s+8\norm{\beta'}_{L^1}+\frac12\norm{\beta'}^2_{L^2}\big]+5KJ_C$.  By \ms{(5.JC)} and \ms{(5.badcounts)}, $J_C\le4Q_{\mathrm{sum}}/(\gamma\varepsilon^2)\le2\cL/(\gamma\varepsilon^2)$, so $5KJ_C\le\frac14\cL$ since $40K\le\gamma\varepsilon^2$.  (Here $2K\cdot\frac{2\pi}{18}\cdot1900s\le1400Ks$ and $2K\cdot\frac12(\norm{\beta'}^2+3J_C)$ were used.)
+
+\emph{Integral term.}  $\int(\Psi*\gamma)\beta=\int_Q\Psi*1_{Q^c}+\int_Q\Psi*\beta'-\int\beta'(\Psi*1_{Q^c})-\int\beta'(\Psi*\beta')$.  The first is bounded by $\int|\Psi(z)|\,|\{x\in Q:x-z\notin Q\}|\,dz\le\int|\Psi(z)|s(|z_1|+|z_2|)dz\le\sqrt2sM_1(\Psi)$; the second and third by $\norm\Psi_{L^1}\norm{\beta'}_{L^1}\le2\norm{\beta'}_{L^1}$ each; the fourth by $\norm\Psi_{L^1}\norm{\beta'}^2_{L^2}\le2\norm{\beta'}_{L^2}^2$ (Young).
+
+Collecting, and using $K\le10^{-3}$ (implied by $40K\le\gamma\varepsilon^2$) to bound $1400Ks+16K\norm{\beta'}_{L^1}+K\norm{\beta'}^2_{L^2}\le s+\norm{\beta'}_{L^1}+\norm{\beta'}^2_{L^2}$, the lemma follows.
+\end{proof}
+
+\begin{remark}[smallness of $K$]\label{rem:Ksmall}
+Lemma~\ref{lem:Bterm} needs $40K\le\gamma\varepsilon^2$.  This is implied by \eqref{eq:hypA}: $\Cc{def}'\ge\frac12\cdot\frac{2\fR^2}{c_{\mathrm{hole}}}\cdot\frac{64\Cc{rem}}{\gamma\varepsilon^2}\ge10^{22}/(\gamma\varepsilon^2)$ (as $\fR\ge64$, $\Cc{rem}>2\cdot10^7$, $c_{\mathrm{hole}}<1.02\cdot10^{-10}$) and $2\Cc{tail}+\Cc{res}\ge1$, so \eqref{eq:hypA} gives $K\le\gamma\varepsilon^2/(2\cdot10^{22})$.
+\end{remark}
+
+\begin{proof}[Proof of (ii)]
+By Proposition~\ref{prop:planedecomp}, (i) and Lemma~\ref{lem:Bterm} (applicable by Remark~\ref{rem:Ksmall}), $\cE(\rho)-nR_\Lam\ge\cL-\frac12\cL-\Bd_A-\frac14\cL-\Bd_B=\frac14\cL-(\Bd_A+\Bd_B)$, and $\Bd_A+\Bd_B\le\Bd$ by \eqref{eq:Psinorms}.
+\end{proof}
